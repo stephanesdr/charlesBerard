@@ -43,7 +43,7 @@
 - [ ] TypeGen (`pnpm typegen`)
 - [ ] Animations page transition
 - [ ] Domaine custom
-- [ ] `SANITY_API_READ_TOKEN` sur Vercel (requis pour Presentation / draft preview)
+- [ ] Preview env vars sur Vercel (cocher Preview dans le dashboard)
 
 ## Problèmes connus
 

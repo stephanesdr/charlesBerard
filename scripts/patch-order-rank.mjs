@@ -31,12 +31,13 @@ loadEnvFile(resolve(root, ".env"));
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
-const token = process.env.SANITY_API_TOKEN;
+const token =
+  process.env.SANITY_API_TOKEN || process.env.SANITY_API_WRITE_TOKEN;
 const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2025-01-01";
 
 if (!projectId || !token) {
   console.error(
-    "Missing NEXT_PUBLIC_SANITY_PROJECT_ID or SANITY_API_TOKEN. Check .env.local",
+    "Missing NEXT_PUBLIC_SANITY_PROJECT_ID or SANITY_API_TOKEN / SANITY_API_WRITE_TOKEN. Check .env.local",
   );
   process.exit(1);
 }

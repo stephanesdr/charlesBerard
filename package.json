@@ -9,6 +9,7 @@
     "lint": "eslint",
     "seed": "node scripts/seed.mjs",
     "patch-order-rank": "node scripts/patch-order-rank.mjs",
+    "sync-vercel-env": "node scripts/sync-vercel-env.mjs",
     "typegen": "sanity schema extract --path=src/sanity/extract.json && sanity typegen generate"
   },
   "dependencies": {
