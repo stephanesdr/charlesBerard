@@ -8,4 +8,8 @@ export default defineCliConfig({
     projectId,
     dataset,
   },
+  studioHost: process.env.SANITY_STUDIO_HOST,
+  project: {
+    basePath: "/studio",
+  },
 });
