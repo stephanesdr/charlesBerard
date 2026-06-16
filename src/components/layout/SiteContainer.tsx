@@ -7,20 +7,17 @@ type SiteContainerProps = {
   fullBleed?: boolean;
 };
 
+/**
+ * Wrapper site — utilise la classe Tailwind `container` (max 90rem + padding responsive).
+ * Préférer `className="container"` directement quand pas besoin de fullBleed.
+ */
 export function SiteContainer({
   children,
   className,
   fullBleed = false,
 }: SiteContainerProps) {
   return (
-    <div
-      className={cn(
-        "mx-auto w-full",
-        fullBleed ? "max-w-none" : "max-w-[1440px]",
-        "px-4 sm:px-6 lg:px-8",
-        className,
-      )}
-    >
+    <div className={cn(fullBleed ? "w-full" : "container", className)}>
       {children}
     </div>
   );

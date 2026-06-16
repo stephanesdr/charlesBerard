@@ -7,10 +7,20 @@ import {
   fallbackProjects,
   fallbackSiteSettings,
   type Home,
+  type HomeSection,
+  type ListSpan,
   type Page,
   type Project,
+  type ResolvedHomeProjectIndexSection,
   type SiteSettings,
 } from "./fallback-data";
+
+const projectListFields = `
+  _id,
+  title,
+  "slug": slug.current,
+  projectStatus
+`;
 
 const projectFields = `
   _id,
@@ -22,6 +32,7 @@ const projectFields = `
   coverImage,
   gallery,
   projectStatus,
+  orderRank,
   order,
   seo
 `;
@@ -31,7 +42,7 @@ export async function getProjects(): Promise<Project[]> {
 
   try {
     const projects = await client.fetch<Project[]>(
-      `*[_type == "project"] | order(order asc, _createdAt desc) { ${projectFields} }`,
+      `*[_type == "project"] | order(orderRank asc, order asc, _createdAt desc) { ${projectFields} }`,
     );
     return projects?.length ? projects : fallbackProjects;
   } catch {
@@ -74,22 +85,74 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   }
 }
 
+const homeQuery = `*[_type == "home"][0] {
+  title,
+  sections[]{
+    _type,
+    _key,
+    label,
+    text,
+    columnLayout,
+    projectSource,
+    showSidebar,
+    sidebarLink,
+    items[]{
+      listSpan,
+      project->{ ${projectListFields} }
+    }
+  },
+  seo
+}`;
+
 export async function getHome(): Promise<Home> {
   if (!isSanityConfigured) return fallbackHome;
 
   try {
-    const home = await client.fetch<Home | null>(
-      `*[_type == "home"][0] {
-        title,
-        projectsLabel,
-        intro,
-        seo
-      }`,
-    );
+    const home = await client.fetch<Home | null>(homeQuery);
     return home ?? fallbackHome;
   } catch {
     return fallbackHome;
   }
+}
+
+export function resolveHomeSections(
+  sections: HomeSection[] | undefined,
+  allProjects: Project[],
+): HomeSection[] {
+  if (!sections?.length) return [];
+
+  return sections.map((section) => {
+    if (section._type !== "homeProjectIndexSection") return section;
+
+    const resolvedItems =
+      section.projectSource === "manual"
+        ? (section.items
+            ?.filter((item) => item.project?._id)
+            .map((item) => ({
+              listSpan: (item.listSpan ?? "single") as ListSpan,
+              project: item.project!,
+            })) ?? [])
+        : allProjects.map((project) => ({
+            listSpan: "single" as ListSpan,
+            project,
+          }));
+
+    return {
+      ...section,
+      resolvedItems,
+    } satisfies ResolvedHomeProjectIndexSection;
+  });
+}
+
+export async function getHomePageData(): Promise<{
+  home: Home;
+  sections: HomeSection[];
+}> {
+  const [home, projects] = await Promise.all([getHome(), getProjects()]);
+  const rawSections =
+    home.sections?.length ? home.sections : fallbackHome.sections ?? [];
+  const sections = resolveHomeSections(rawSections, projects);
+  return { home, sections };
 }
 
 export async function getPageBySlug(slug: string): Promise<Page | null> {

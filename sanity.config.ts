@@ -1,6 +1,7 @@
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { visionTool } from "@sanity/vision";
+import { structure } from "./src/sanity/structure";
 import { schemaTypes } from "./src/sanity/schemaTypes";
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "placeholder";
@@ -11,7 +12,10 @@ export default defineConfig({
   title: "Charles Berard",
   projectId,
   dataset,
-  plugins: [structureTool(), visionTool()],
+  plugins: [
+    structureTool({ structure }),
+    visionTool(),
+  ],
   schema: {
     types: schemaTypes,
   },

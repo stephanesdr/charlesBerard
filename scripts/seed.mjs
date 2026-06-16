@@ -176,6 +176,7 @@ function parseProjectsFromCsv(path) {
       body: textToBlocks(texte),
       projectStatus: isConcept ? "concept" : "realized",
       order,
+      orderRank: `0|${String(100000 + order * 4096).padStart(6, "0")}:`,
     };
   });
 }
@@ -217,9 +218,28 @@ const home = {
   _id: "home",
   _type: "home",
   title: "Accueil",
-  projectsLabel: "Projets",
-  intro:
-    "Direction graphique, identité et conception pour des projets culturels, institutionnels et événementiels.",
+  sections: [
+    {
+      _type: "homeIntroSection",
+      _key: "intro",
+      label: "Intro",
+      text:
+        "Direction graphique, identité et conception pour des projets culturels, institutionnels et événementiels.",
+    },
+    {
+      _type: "homeProjectIndexSection",
+      _key: "projects",
+      label: "Projets",
+      columnLayout: "two",
+      projectSource: "all",
+      showSidebar: true,
+      sidebarLink: {
+        label: "Contact",
+        href: "/contact",
+        openInNewTab: false,
+      },
+    },
+  ],
   seo: {
     title: "Charles Berard — Direction graphique",
     description: "Portfolio de projets sélectionnés.",

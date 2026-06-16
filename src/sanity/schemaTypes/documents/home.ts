@@ -1,9 +1,11 @@
-import { defineField, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
+import { HomeIcon } from "@sanity/icons";
 
 export const home = defineType({
   name: "home",
   title: "Accueil",
   type: "document",
+  icon: HomeIcon,
   fields: [
     defineField({
       name: "title",
@@ -12,16 +14,17 @@ export const home = defineType({
       initialValue: "Accueil",
     }),
     defineField({
-      name: "projectsLabel",
-      title: "Label section projets",
-      type: "string",
-      initialValue: "Projets",
-    }),
-    defineField({
-      name: "intro",
-      title: "Introduction",
-      type: "text",
-      rows: 3,
+      name: "sections",
+      title: "Sections",
+      type: "array",
+      of: [
+        defineArrayMember({ type: "homeIntroSection" }),
+        defineArrayMember({ type: "homeProjectIndexSection" }),
+      ],
+      options: {
+        layout: "grid",
+      },
+      validation: (rule) => rule.min(1),
     }),
     defineField({
       name: "seo",
@@ -30,8 +33,12 @@ export const home = defineType({
     }),
   ],
   preview: {
-    prepare() {
-      return { title: "Accueil" };
+    select: { sections: "sections" },
+    prepare({ sections }) {
+      return {
+        title: "Accueil",
+        subtitle: `${sections?.length ?? 0} section(s)`,
+      };
     },
   },
 });

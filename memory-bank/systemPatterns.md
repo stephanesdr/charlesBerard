@@ -5,9 +5,10 @@
 ```mermaid
 flowchart TB
   subgraph frontend [Next.js App Router]
-    Layout[layout.tsx + SiteContainer]
-    Pages[page.tsx / projets / a-propos / contact]
-    Blocks[ProjectList / ProjectDetail / PageContent]
+    Layout[layout.tsx + container]
+    Home[HomeSections]
+    Pages[projets / a-propos / contact]
+    Blocks[HomeProjectIndexSection / ProjectDetail / PageContent]
     PT[CustomPortableText]
     Media[Media + Lightbox]
     Header[AreaHeader GSAP]
@@ -15,16 +16,18 @@ flowchart TB
 
   subgraph cms [Sanity]
     Studio[/studio embedded]
+    Structure[structure + orderable list]
     Docs[project page home siteSettings]
   end
 
   subgraph data [Data layer]
-    Fetch[src/lib/sanity/fetch.ts]
+    Fetch[fetch.ts + getHomePageData]
     Fallback[fallback-data.ts]
   end
 
+  Home --> Fetch
   Pages --> Fetch
-  Fetch -->|env configuré| SanityAPI[Sanity CDN/API]
+  Fetch -->|env| SanityAPI[Sanity CDN/API]
   Fetch -->|sinon| Fallback
   Studio --> Docs
 ```
@@ -47,59 +50,64 @@ flowchart TD
 ### Layout Grilli (14 colonnes)
 
 - `.layout-grid` : 94vw mobile, `repeat(14, 1fr)` + gap 20px ≥ 600px
-- `.content-type-column` : cols 1–3, masqué mobile
+- `.content-type-column` : cols 1–3, `font-label` (16px)
 - `.content-column` : cols 3–15 desktop
-- `.description-column` : sidebar meta (cols 12–15 sur détail projet)
+- `.library-overview-1column` / `-2columns` : index projets
+- `.project-index-wide` : span 2 cols en grille 2 col
+
+### Typographie (grillitype.com + Space Mono)
+
+| Utility | Usage |
+|---------|--------|
+| `font-sans` (body) | 16px / 1.375 |
+| `font-label` | Labels colonne, sidebar |
+| `font-m` | Intro, lead texte |
+| `font-xxl` | Index projets (vw scale) |
 
 ### Navigation area-font
 
-- `AreaHeader` : logo + nav en boutons `btn-fixed` (primary / secondary)
-- Scroll-hide via GSAP `translateY`
-- Pas de sous-menus Blaze, pas cart/login
+- `AreaHeader` : `buttonVariants` navPrimary / navSecondary
+- Scroll-hide GSAP
+- Font 16px bold
 
-### Portable Text
+### Home page builder
 
-- Config modulaire : `components/portable-text/config.tsx`
-- Wrapper RSC-friendly : `CustomPortableText.tsx`
-- Fallbacks `unknownBlockStyle` / `unknownType`
+- `getHomePageData()` → `resolveHomeSections()`
+- `projectSource: all` → ordre `orderRank` global
+- `projectSource: manual` → array `items` + `listSpan`
 
-### Media
+### Portable Text / Media / Animations
 
-- `Media.tsx` : image Sanity ou placeholder gradient
-- `yet-another-react-lightbox` pour zoom
-- `createImageUrlBuilder` pour URLs CDN
-
-### Animations
-
-- `AnimationOrchestratorProvider` dans root layout
-- `useRevealOnScroll` + ScrollTrigger pour sections
-- `prefers-reduced-motion` : pas d’animation scroll
+- Config modulaire portable-text
+- Media + lightbox + placeholders
+- `useRevealOnScroll` + orchestrator
 
 ## Patterns Sanity
 
 | Type | Rôle |
 |------|------|
-| `project` | Portfolio item principal |
+| `project` | Portfolio + `orderRank` |
 | `page` | À propos, Contact |
-| `home` | Singleton accueil (label section, intro) |
-| `siteSettings` | Nav header, footer, SEO global |
-| `blockContent` | Corps riche partagé |
+| `home` | Singleton, `sections[]` page builder |
+| `homeIntroSection` | Bloc intro |
+| `homeProjectIndexSection` | Index projets configurable |
+| `siteSettings` | Nav, footer, SEO |
 
-**Singleton IDs fixes** (seed) : `siteSettings`, `home`, `page-a-propos`, `page-contact`, `project-{slug}`
+**Structure Studio** : Accueil → Paramètres → Projets (ordre) → autres types
 
 ## Conventions code
 
-- `cn()` depuis `src/lib/utils.ts` pour classNames
-- Server Components par défaut ; `"use client"` pour GSAP, lightbox, header
-- Pas de secrets dans le repo ; `.env.local` gitignored
-- Commits : messages en anglais ou français, focus sur le why
+- `cn()` + Tailwind v4 utility-first
+- `container` pour marges globales
+- Rouge = `brand` / `primary`, pas `accent`
+- Server Components par défaut ; client pour GSAP, lightbox, index animé
 
 ## Routes
 
 | Route | Composant |
 |-------|-----------|
-| `/` | `ProjectList` + intro home |
-| `/projets/[slug]` | `ProjectDetail` (SSG via `generateStaticParams`) |
+| `/` | `HomeSections` |
+| `/projets/[slug]` | `ProjectDetail` |
 | `/a-propos` | `PageContent` |
 | `/contact` | `PageContent` |
 | `/studio` | `NextStudio` |

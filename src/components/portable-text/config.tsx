@@ -12,7 +12,7 @@ export const projectBodyComponents = {
         return (
           <a
             href={href}
-            className="underline underline-offset-2 hover:text-accent"
+            className="underline underline-offset-2 hover:text-brand"
             target="_blank"
             rel="noreferrer noopener"
           >
@@ -23,7 +23,7 @@ export const projectBodyComponents = {
       return (
         <Link
           href={href}
-          className="underline underline-offset-2 hover:text-accent"
+          className="underline underline-offset-2 hover:text-brand"
         >
           {children}
         </Link>

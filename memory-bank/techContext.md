@@ -7,6 +7,7 @@
 | Framework | Next.js 16 App Router | vs TanStack Start — écosystème Sanity |
 | CMS | Sanity v6 embedded | Studio `/studio` |
 | Styling | Tailwind CSS v4 | `@import "tailwindcss"`, tokens dans `globals.css` |
+| UI | shadcn base-nova | `button` + thème CB dans `globals.css` |
 | Animation | GSAP + `@gsap/react` | ScrollTrigger pour reveals |
 | Rich text | `@portabletext/react` | |
 | Lightbox | `yet-another-react-lightbox` | |
@@ -14,7 +15,17 @@
 | Hosting | Vercel (stadler-design) | https://charles-berard.vercel.app |
 | Repo | github.com/stephanesdr/charlesBerard | |
 
-**Non installé V1** : shadcn/ui complet (seul `cn` via clsx + tailwind-merge)
+## Typographie
+
+| Élément | Font | Échelle (ref. grillitype.com) |
+|---------|------|-------------------------------|
+| Texte global | **Space Mono** (Google Fonts, `next/font`) | 16px / lh 1.375 |
+| Labels colonne (`font-label`) | Space Mono | 16px / lh 1.375 |
+| Intro / lead (`font-m`) | Space Mono | 20px (1.25rem) / lh 1.35 |
+| Index projets (`font-xxl`) | Space Mono | 10.375vw → 5.1875vw → 3.32vw, lh 1, tracking -0.015em |
+| Nav header | Space Mono bold | 16px |
+
+Variable CSS : `--font-space-mono` (layout) → `--font-sans` dans `@theme`.
 
 ## Sanity
 
@@ -26,9 +37,13 @@
 | `SANITY_API_TOKEN` | Write — seed, local only |
 | `SANITY_API_READ_TOKEN` | Read — optionnel preview |
 
+**Plugins Studio** : `@sanity/orderable-document-list` (ordre projets via `orderRank`)
+
 **CORS** : localhost:3000, charles-berard.vercel.app, `*.vercel.app`
 
 **Schema** : `src/sanity/schemaTypes/` + `sanity.config.ts` racine
+
+**Structure** : `src/sanity/structure/index.ts` — singletons + liste orderable projets
 
 **Deploy schéma cloud** : `pnpm exec sanity schema deploy` (SIGABRT local possible — Studio utilise schémas locaux)
 
@@ -49,14 +64,16 @@ Override : `CSV_PATH=/path/to.csv node scripts/seed.mjs`
 ```
 CharlesBerard/
 ├── memory-bank/           # Contexte persistant (Cline)
+├── docs/shadcn-registry.md
 ├── sanity.config.ts
 ├── scripts/seed.mjs
 ├── src/
 │   ├── app/               # Routes + globals.css
-│   ├── components/        # layout, blocks, portable-text, media
+│   ├── components/        # layout, blocks, ui, portable-text, media
 │   ├── lib/sanity/        # client, fetch, fallback, image
 │   ├── lib/animation/
-│   └── sanity/schemaTypes/
+│   ├── sanity/schemaTypes/blocks/  # home page builder
+│   └── sanity/structure/
 └── .cursor/rules/         # Règles agent incl. memory-bank
 ```
 
@@ -66,6 +83,7 @@ CharlesBerard/
 - Images Sanity : `cdn.sanity.io` dans `next.config.ts` remotePatterns
 - FR uniquement — `lang="fr"` dans layout
 - Placeholders images tant qu’assets non uploadés
+- Classe Tailwind `container` — max 90rem, padding responsive
 
 ## Intégrations futures (phase 2)
 

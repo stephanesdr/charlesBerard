@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { NavigationItem } from "@/lib/sanity/fallback-data";
 
@@ -46,16 +47,16 @@ export function AreaHeader({ siteTitle, navigation }: AreaHeaderProps) {
     <header
       ref={headerRef}
       className={cn(
-        "site-header fixed left-0 right-0 top-0 z-[1000]",
+        "site-header fixed inset-x-0 top-0 z-[1000]",
         "flex items-center justify-between gap-4",
-        "px-4 py-2 sm:px-6 lg:px-8",
+        "container py-2",
       )}
     >
       <Link
         href="/"
         className={cn(
-          "font-bold text-sm leading-none text-ink no-underline",
-          "hover:text-accent transition-colors duration-150",
+          "text-base font-bold leading-none text-ink no-underline",
+          "transition-colors duration-150 hover:text-brand",
         )}
       >
         {siteTitle}
@@ -70,12 +71,10 @@ export function AreaHeader({ siteTitle, navigation }: AreaHeaderProps) {
           const isExternal = item.href.startsWith("http");
 
           const className = cn(
-            "btn-fixed inline-flex items-center justify-center",
-            "px-3 py-2 text-xs font-bold leading-none no-underline",
-            "transition-colors duration-150 sm:px-4 sm:text-sm",
-            isPrimary
-              ? "btn-primary bg-accent text-surface hover:bg-accent/90"
-              : "btn-secondary border border-ink/20 bg-surface/80 text-ink hover:border-accent hover:text-accent",
+            buttonVariants({
+              variant: isPrimary ? "navPrimary" : "navSecondary",
+              size: "nav",
+            }),
           );
 
           if (isExternal) {
@@ -93,7 +92,11 @@ export function AreaHeader({ siteTitle, navigation }: AreaHeaderProps) {
           }
 
           return (
-            <Link key={item.href + item.label} href={item.href} className={className}>
+            <Link
+              key={item.href + item.label}
+              href={item.href}
+              className={className}
+            >
               {item.label}
             </Link>
           );

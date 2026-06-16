@@ -10,17 +10,17 @@ type ProjectDetailProps = {
 
 export function ProjectDetail({ project }: ProjectDetailProps) {
   return (
-    <article className="margin-bottom-l">
+    <article className="mb-5">
       <section
         className={cn(
-          "layout-grid border-b border-ink/20",
-          "margin-bottom-l pb-5",
+          "layout-grid highlight-img-txtnarrow",
+          "mb-5 border-b border-ink/20 pb-5",
         )}
       >
-        <div className="content-type-column hidden sm:grid text-sm leading-[1.375]">
+        <div className="content-type-column">
           {project.services?.join(", ") || "Projet"}
         </div>
-        <div className="content-column sm:col-span-9">
+        <div className="content-column">
           <h1 className="mb-4 text-2xl font-normal leading-tight text-ink lg:text-3xl">
             {project.title}
           </h1>
@@ -34,10 +34,10 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
             placeholderLabel={project.title}
             lightbox
             priority
-            sizes="(max-width: 1100px) 100vw, 66vw"
+            sizes="(max-width: 1100px) 100vw, 50vw"
           />
         </div>
-        <div className="description-column sm:col-span-3 text-sm leading-[1.375] text-ink">
+        <div className="description-column text-ink">
           {project.summary && <p className="mb-4">{project.summary}</p>}
           {project.services && (
             <ul className="m-0 list-none space-y-1 p-0 text-ink/70">
@@ -49,30 +49,26 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
         </div>
       </section>
 
-      <section className="layout-grid margin-bottom-m">
-        <div className="content-type-column hidden sm:grid text-sm leading-[1.375]">
-          Texte
-        </div>
-        <div className="content-column sm:col-span-9">
+      <section className="layout-grid mb-5">
+        <div className="content-type-column">Texte</div>
+        <div className="content-column">
           <CustomPortableText value={project.body} />
         </div>
       </section>
 
-      <section className="layout-grid margin-bottom-l">
-        <div className="content-type-column hidden sm:grid text-sm leading-[1.375]">
-          Galerie
-        </div>
-        <div className="content-column sm:col-span-12">
+      <section className="layout-grid mb-5">
+        <div className="content-type-column">Galerie</div>
+        <div className="content-column">
           <MediaGallery images={project.gallery} title={project.title} />
         </div>
       </section>
 
       <section className="layout-grid border-t border-ink/20 pt-5">
-        <div className="content-type-column hidden sm:grid text-sm">Navigation</div>
-        <div className="content-column sm:col-span-9">
+        <div className="content-type-column">Navigation</div>
+        <div className="content-column">
           <Link
             href="/"
-            className="text-sm font-bold text-ink hover:text-accent no-underline transition-colors"
+            className="text-sm font-bold text-ink no-underline transition-colors hover:text-brand"
           >
             ← Tous les projets
           </Link>

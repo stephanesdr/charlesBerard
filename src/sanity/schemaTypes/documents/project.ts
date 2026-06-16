@@ -1,3 +1,7 @@
+import {
+  orderRankField,
+  orderRankOrdering,
+} from "@sanity/orderable-document-list";
 import { defineArrayMember, defineField, defineType } from "sanity";
 
 export const project = defineType({
@@ -70,11 +74,15 @@ export const project = defineType({
       description:
         "« Axe » : travail présenté même si le projet n'a pas été sélectionné ou publié.",
     }),
+    orderRankField({ type: "project", hidden: true }),
     defineField({
       name: "order",
-      title: "Ordre",
+      title: "Ordre (legacy)",
       type: "number",
-      initialValue: 0,
+      hidden: true,
+      deprecated: {
+        reason: "Utiliser « Projets (ordre) » pour réordonner via orderRank.",
+      },
     }),
     defineField({
       name: "seo",
@@ -83,8 +91,9 @@ export const project = defineType({
     }),
   ],
   orderings: [
+    orderRankOrdering,
     {
-      title: "Ordre",
+      title: "Ordre legacy",
       name: "orderAsc",
       by: [
         { field: "order", direction: "asc" },

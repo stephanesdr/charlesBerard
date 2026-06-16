@@ -115,7 +115,7 @@ export function MediaGallery({ images, title }: MediaGalleryProps) {
 
   if (!slides.length) {
     return (
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid gap-5 grid-cols-1 sm:grid-cols-2">
         <PlaceholderImage label={title || "Galerie"} />
         <PlaceholderImage label={title || "Galerie"} />
       </div>
@@ -124,7 +124,7 @@ export function MediaGallery({ images, title }: MediaGalleryProps) {
 
   return (
     <>
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid gap-5 grid-cols-1 sm:grid-cols-2">
         {slides.map((slide, i) => (
           <button
             key={slide.src}

@@ -19,6 +19,7 @@ export type Project = {
   coverImage?: SanityImage;
   gallery?: SanityImage[];
   projectStatus?: ProjectStatus;
+  orderRank?: string;
   order?: number;
   seo?: { title?: string; description?: string };
 };
@@ -46,10 +47,49 @@ export type Page = {
   seo?: { title?: string; description?: string };
 };
 
+export type ListSpan = "single" | "wide";
+export type ColumnLayout = "one" | "two";
+export type ProjectSource = "all" | "manual";
+
+export type HomeIntroSection = {
+  _type: "homeIntroSection";
+  _key: string;
+  label?: string;
+  text?: string;
+};
+
+export type HomeProjectIndexItem = {
+  listSpan?: ListSpan;
+  project?: Project;
+};
+
+export type HomeProjectIndexSection = {
+  _type: "homeProjectIndexSection";
+  _key: string;
+  label?: string;
+  columnLayout?: ColumnLayout;
+  projectSource?: ProjectSource;
+  showSidebar?: boolean;
+  sidebarLink?: {
+    label: string;
+    href: string;
+    openInNewTab?: boolean;
+  };
+  items?: HomeProjectIndexItem[];
+};
+
+export type ResolvedHomeProjectIndexSection = HomeProjectIndexSection & {
+  resolvedItems: { listSpan: ListSpan; project: Project }[];
+};
+
+export type HomeSection =
+  | HomeIntroSection
+  | HomeProjectIndexSection
+  | ResolvedHomeProjectIndexSection;
+
 export type Home = {
   title?: string;
-  projectsLabel?: string;
-  intro?: string;
+  sections?: HomeSection[];
   seo?: { title?: string; description?: string };
 };
 
@@ -91,6 +131,7 @@ export const fallbackProjects: Project[] = [
     ),
     projectStatus: "realized",
     order: 0,
+    orderRank: "0|hzzzzz:",
   },
   {
     _id: "project-federal-innovation",
@@ -109,6 +150,7 @@ export const fallbackProjects: Project[] = [
     ),
     projectStatus: "realized",
     order: 1,
+    orderRank: "0|i00007:",
   },
   {
     _id: "project-les-tailleurs",
@@ -129,6 +171,7 @@ export const fallbackProjects: Project[] = [
     ),
     projectStatus: "realized",
     order: 2,
+    orderRank: "0|i0000f:",
   },
   {
     _id: "project-brussels-food-campus",
@@ -148,8 +191,40 @@ export const fallbackProjects: Project[] = [
     ),
     projectStatus: "concept",
     order: 3,
+    orderRank: "0|i0001f:",
   },
 ];
+
+function buildFallbackHomeSections(): HomeSection[] {
+  const introText =
+    "Direction graphique, identité et conception pour des projets culturels, institutionnels et événementiels.";
+
+  return [
+    {
+      _type: "homeIntroSection",
+      _key: "intro",
+      label: "Intro",
+      text: introText,
+    },
+    {
+      _type: "homeProjectIndexSection",
+      _key: "projects",
+      label: "Projets",
+      columnLayout: "two",
+      projectSource: "all",
+      showSidebar: true,
+      sidebarLink: {
+        label: "Contact",
+        href: "/contact",
+        openInNewTab: false,
+      },
+      resolvedItems: fallbackProjects.map((project) => ({
+        listSpan: "single",
+        project,
+      })),
+    },
+  ];
+}
 
 export const fallbackSiteSettings: SiteSettings = {
   siteTitle: "Charles Berard",
@@ -174,9 +249,7 @@ export const fallbackSiteSettings: SiteSettings = {
 
 export const fallbackHome: Home = {
   title: "Accueil",
-  projectsLabel: "Projets",
-  intro:
-    "Direction graphique, identité et conception pour des projets culturels, institutionnels et événementiels.",
+  sections: buildFallbackHomeSections(),
   seo: {
     title: "Charles Berard — Direction graphique",
     description: "Portfolio de projets sélectionnés.",

@@ -5,6 +5,16 @@ import { Footer } from "@/components/layout/Footer";
 import { SiteContainer } from "@/components/layout/SiteContainer";
 import { AnimationOrchestratorProvider } from "@/lib/animation/orchestrator";
 import { getSiteSettings } from "@/lib/sanity/fetch";
+import { Space_Mono } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const spaceMono = Space_Mono({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-space-mono",
+  display: "swap",
+});
+
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
@@ -27,7 +37,7 @@ export default async function RootLayout({
   const settings = await getSiteSettings();
 
   return (
-    <html lang="fr">
+    <html lang="fr" className={cn("font-sans", spaceMono.variable)}>
       <body className="min-h-screen">
         <AnimationOrchestratorProvider>
           <AreaHeader

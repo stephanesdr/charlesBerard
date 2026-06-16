@@ -21,16 +21,14 @@ export async function PageContent({ slug }: PageContentProps) {
   if (!page) return null;
 
   return (
-    <article className="layout-grid margin-bottom-l">
-      <div className="content-type-column hidden sm:grid text-sm">
-        {page.title}
-      </div>
-      <div className="content-column sm:col-span-9">
+    <article className="layout-grid mb-5">
+      <div className="content-type-column">{page.title}</div>
+      <div className="content-column">
         <h1 className="mb-4 text-2xl font-normal leading-tight lg:text-3xl">
           {page.title}
         </h1>
         {page.intro && (
-          <p className="mb-6 text-xl leading-[1.35] text-ink">{page.intro}</p>
+          <p className="mb-6 font-m text-ink">{page.intro}</p>
         )}
         <CustomPortableText value={page.body} />
       </div>
