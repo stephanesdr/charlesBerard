@@ -50,12 +50,20 @@ export type Page = {
 export type ListSpan = "single" | "wide";
 export type ColumnLayout = "one" | "two";
 export type ProjectSource = "all" | "manual";
+export type RowLayout = "single" | "pair";
 
 export type HomeIntroSection = {
   _type: "homeIntroSection";
   _key: string;
   label?: string;
   text?: string;
+};
+
+export type HomeProjectRow = {
+  _key: string;
+  _type?: "homeProjectRow";
+  layout?: RowLayout;
+  projects?: Project[];
 };
 
 export type HomeProjectIndexItem = {
@@ -67,7 +75,10 @@ export type HomeProjectIndexSection = {
   _type: "homeProjectIndexSection";
   _key: string;
   label?: string;
+  rows?: HomeProjectRow[];
+  /** @deprecated Utiliser `rows` */
   columnLayout?: ColumnLayout;
+  /** @deprecated Utiliser `rows` */
   projectSource?: ProjectSource;
   showSidebar?: boolean;
   sidebarLink?: {
@@ -75,11 +86,18 @@ export type HomeProjectIndexSection = {
     href: string;
     openInNewTab?: boolean;
   };
+  /** @deprecated Utiliser `rows` */
   items?: HomeProjectIndexItem[];
 };
 
+export type ResolvedHomeProjectRow = {
+  _key: string;
+  layout: RowLayout;
+  projects: Project[];
+};
+
 export type ResolvedHomeProjectIndexSection = HomeProjectIndexSection & {
-  resolvedItems: { listSpan: ListSpan; project: Project }[];
+  resolvedRows: ResolvedHomeProjectRow[];
 };
 
 export type HomeSection =
@@ -199,6 +217,8 @@ function buildFallbackHomeSections(): HomeSection[] {
   const introText =
     "Direction graphique, identité et conception pour des projets culturels, institutionnels et événementiels.";
 
+  const [p1, p2, p3, p4] = fallbackProjects;
+
   return [
     {
       _type: "homeIntroSection",
@@ -210,18 +230,17 @@ function buildFallbackHomeSections(): HomeSection[] {
       _type: "homeProjectIndexSection",
       _key: "projects",
       label: "Projets",
-      columnLayout: "two",
-      projectSource: "all",
       showSidebar: true,
       sidebarLink: {
         label: "Contact",
         href: "/contact",
         openInNewTab: false,
       },
-      resolvedItems: fallbackProjects.map((project) => ({
-        listSpan: "single",
-        project,
-      })),
+      resolvedRows: [
+        { _key: "row-1", layout: "single", projects: [p1] },
+        { _key: "row-2", layout: "pair", projects: [p2, p3] },
+        { _key: "row-3", layout: "single", projects: [p4] },
+      ],
     },
   ];
 }

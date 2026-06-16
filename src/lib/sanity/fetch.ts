@@ -8,10 +8,11 @@ import {
   fallbackSiteSettings,
   type Home,
   type HomeSection,
-  type ListSpan,
   type Page,
   type Project,
   type ResolvedHomeProjectIndexSection,
+  type ResolvedHomeProjectRow,
+  type RowLayout,
   type SiteSettings,
 } from "./fallback-data";
 
@@ -97,6 +98,11 @@ const homeQuery = `*[_type == "home"][0] {
     _key,
     label,
     text,
+    rows[]{
+      _key,
+      layout,
+      "projects": projects[]->{ ${projectListFields} }
+    },
     columnLayout,
     projectSource,
     showSidebar,
@@ -131,22 +137,45 @@ export function resolveHomeSections(
   return sections.map((section) => {
     if (section._type !== "homeProjectIndexSection") return section;
 
-    const resolvedItems =
-      section.projectSource === "manual"
-        ? (section.items
-            ?.filter((item) => item.project?._id)
-            .map((item) => ({
-              listSpan: (item.listSpan ?? "single") as ListSpan,
-              project: item.project!,
-            })) ?? [])
-        : allProjects.map((project) => ({
-            listSpan: "single" as ListSpan,
-            project,
-          }));
+    let resolvedRows: ResolvedHomeProjectRow[] = [];
+
+    if (section.rows?.length) {
+      resolvedRows = section.rows
+        .map((row) => {
+          const projects =
+            row.projects?.filter((project) => project?._id) ?? [];
+          if (!projects.length) return null;
+
+          const layout: RowLayout =
+            row.layout === "pair" && projects.length >= 2 ? "pair" : "single";
+
+          return {
+            _key: row._key,
+            layout,
+            projects:
+              layout === "pair" ? projects.slice(0, 2) : projects.slice(0, 1),
+          };
+        })
+        .filter((row): row is ResolvedHomeProjectRow => row !== null);
+    } else if (section.items?.length) {
+      resolvedRows = section.items
+        .filter((item) => item.project?._id)
+        .map((item, index) => ({
+          _key: `legacy-item-${index}`,
+          layout: "single" as RowLayout,
+          projects: [item.project!],
+        }));
+    } else if (section.projectSource === "all") {
+      resolvedRows = allProjects.map((project) => ({
+        _key: project._id,
+        layout: "single" as RowLayout,
+        projects: [project],
+      }));
+    }
 
     return {
       ...section,
-      resolvedItems,
+      resolvedRows,
     } satisfies ResolvedHomeProjectIndexSection;
   });
 }

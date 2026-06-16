@@ -14,37 +14,12 @@ export const homeProjectIndexSection = defineType({
       initialValue: "Projets",
     }),
     defineField({
-      name: "columnLayout",
-      title: "Grille de la liste",
-      type: "string",
-      options: {
-        list: [
-          { title: "1 colonne", value: "one" },
-          { title: "2 colonnes", value: "two" },
-        ],
-        layout: "radio",
-      },
-      initialValue: "two",
-    }),
-    defineField({
-      name: "projectSource",
-      title: "Source des projets",
-      type: "string",
-      options: {
-        list: [
-          { title: "Tous les projets (ordre global)", value: "all" },
-          { title: "Sélection manuelle", value: "manual" },
-        ],
-        layout: "radio",
-      },
-      initialValue: "all",
-    }),
-    defineField({
-      name: "items",
-      title: "Projets",
+      name: "rows",
+      title: "Lignes",
       type: "array",
-      of: [defineArrayMember({ type: "homeProjectIndexItem" })],
-      hidden: ({ parent }) => parent?.projectSource !== "manual",
+      of: [defineArrayMember({ type: "homeProjectRow" })],
+      description:
+        "Empilez des lignes : 1 projet ou 2 projets côte à côte. L’ordre définit l’index sur la page.",
     }),
     defineField({
       name: "showSidebar",
@@ -59,29 +34,44 @@ export const homeProjectIndexSection = defineType({
       type: "link",
       hidden: ({ parent }) => !parent?.showSidebar,
     }),
+    // Legacy — migré automatiquement côté frontend si `rows` est vide
+    defineField({
+      name: "columnLayout",
+      title: "Grille (legacy)",
+      type: "string",
+      hidden: true,
+      deprecated: { reason: "Utiliser les lignes (rows) pour composer l’index." },
+    }),
+    defineField({
+      name: "projectSource",
+      title: "Source (legacy)",
+      type: "string",
+      hidden: true,
+      deprecated: { reason: "Utiliser les lignes (rows) pour composer l’index." },
+    }),
+    defineField({
+      name: "items",
+      title: "Projets (legacy)",
+      type: "array",
+      of: [defineArrayMember({ type: "homeProjectIndexItem" })],
+      hidden: true,
+      deprecated: { reason: "Utiliser les lignes (rows) pour composer l’index." },
+    }),
   ],
   preview: {
     select: {
       label: "label",
-      columnLayout: "columnLayout",
-      projectSource: "projectSource",
-      items: "items",
+      rows: "rows",
     },
-    prepare({ label, columnLayout, projectSource, items }) {
-      const cols = columnLayout === "one" ? "1 col" : "2 col";
-      const source =
-        projectSource === "manual"
-          ? `${items?.length ?? 0} sélectionnés`
-          : "tous";
-      const wideCount =
-        items?.filter((item: { listSpan?: string }) => item.listSpan === "wide")
-          .length ?? 0;
-      const wide =
-        columnLayout === "two" && wideCount > 0 ? ` · ${wideCount} large` : "";
+    prepare({ label, rows }) {
+      const count = rows?.length ?? 0;
+      const pairCount =
+        rows?.filter((row: { layout?: string }) => row.layout === "pair").length ?? 0;
+      const pairHint = pairCount > 0 ? ` · ${pairCount} double(s)` : "";
 
       return {
         title: label || "Index projets",
-        subtitle: `Index · ${cols} · ${source}${wide}`,
+        subtitle: `${count} ligne${count > 1 ? "s" : ""}${pairHint}`,
       };
     },
   },

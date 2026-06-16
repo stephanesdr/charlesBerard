@@ -10,15 +10,13 @@ Texte d'intro avec label éditorial (colonne gauche).
 
 ### Index projets (`homeProjectIndexSection`)
 
-- **Grille** : 1 ou 2 colonnes (desktop), 1 colonne sur mobile.
-- **Source** :
-  - **Tous les projets** — ordre défini dans « Projets (ordre) » (drag-and-drop).
-  - **Sélection manuelle** — choix et ordre dans la liste du bloc.
-- **Largeur par projet** (sélection manuelle, grille 2 col) :
-  - **1 colonne** — demi-largeur.
-  - **2 colonnes** — titre pleine largeur.
-- **Colonne latérale** — compteur + lien (défaut : Contact).
+Composez l’index en **lignes empilées** :
 
-## Ordre global des projets
+- **1 projet** — un titre sur la ligne
+- **2 projets côte à côte** — deux titres sur la même ligne
 
-Utiliser **Projets (ordre)** dans la barre latérale Studio pour trier le portfolio complet.
+Exemple : 1 projet → 2 projets → 1 projet → 1 projet.
+
+- **Colonne latérale** — compteur + lien (défaut : Contact)
+
+L’ordre global du portfolio reste dans **Projets (ordre)** ; l’index home choisit quels projets apparaissent et comment ils sont groupés par ligne.

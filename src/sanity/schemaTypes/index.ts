@@ -1,6 +1,7 @@
 import { type SchemaTypeDefinition } from "sanity";
 import { homeIntroSection } from "./blocks/homeIntroSection";
 import { homeProjectIndexItem } from "./blocks/homeProjectIndexItem";
+import { homeProjectRow } from "./blocks/homeProjectRow";
 import { homeProjectIndexSection } from "./blocks/homeProjectIndexSection";
 import { blockContent } from "./objects/blockContent";
 import { link } from "./objects/link";
@@ -18,6 +19,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   seo,
   homeIntroSection,
   homeProjectIndexItem,
+  homeProjectRow,
   homeProjectIndexSection,
   project,
   siteSettings,

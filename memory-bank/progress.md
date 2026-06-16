@@ -10,7 +10,8 @@
 | Vercel production | ✅ https://charles-berard.vercel.app |
 | Sanity projet | ✅ `x4xhmesz` / `production` |
 | Seed contenu | ✅ 4 projets + home sections + settings + pages |
-| Studio embedded | ✅ `/studio` + `basePath` + Presentation Tool |
+| Home index lignes | ✅ `homeProjectRow` (1 ou 2 projets par ligne) |
+| Presentation preview | ✅ Sans refresh loop en draft |
 | orderRank production | ✅ 4 projets patchés |
 | shadcn + Tailwind v4 | ✅ button, container, thème CB |
 | Memory bank | ✅ À jour |

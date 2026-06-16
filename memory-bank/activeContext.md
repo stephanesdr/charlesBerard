@@ -8,7 +8,8 @@ Studio Sanity stabilisé en prod ; home éditoriale + stack UI/Typo en place. Pr
 
 ## Travail récent
 
-- **Presentation Tool** : `presentationTool` + `resolve` (home, project, page) + draft mode API + `VisualEditing`
+- **Index home** : lignes empilées `homeProjectRow` (1 ou 2 projets par ligne), plus grille globale
+- **Presentation preview** : `SanityLive` désactivé en draft (plus de refresh en boucle)
 - **Studio embedded** : `basePath: "/studio"` dans `sanity.config.ts` + `sanity.cli.ts` (fix « Tool not found: studio »)
 - **orderRank** : `scripts/patch-order-rank.mjs` + `pnpm patch-order-rank` — 4 projets production patchés
 - **Route groups** : `(site)/` = header/footer/container ; `studio/` = plein viewport (`h-dvh`)

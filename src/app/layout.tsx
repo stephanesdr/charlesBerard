@@ -43,7 +43,7 @@ export default async function RootLayout({
     >
       <body className="min-h-screen" suppressHydrationWarning>
         {children}
-        <SanityLive />
+        {!isDraft && <SanityLive includeDrafts={false} />}
         {isDraft && (
           <>
             <VisualEditing />

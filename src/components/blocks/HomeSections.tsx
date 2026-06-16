@@ -13,7 +13,7 @@ type HomeSectionsProps = {
 function isResolvedProjectIndex(
   section: HomeSection,
 ): section is ResolvedHomeProjectIndexSection {
-  return section._type === "homeProjectIndexSection" && "resolvedItems" in section;
+  return section._type === "homeProjectIndexSection" && "resolvedRows" in section;
 }
 
 export function HomeSections({ sections }: HomeSectionsProps) {

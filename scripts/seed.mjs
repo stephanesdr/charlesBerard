@@ -231,14 +231,55 @@ const home = {
       _type: "homeProjectIndexSection",
       _key: "projects",
       label: "Projets",
-      columnLayout: "two",
-      projectSource: "all",
       showSidebar: true,
       sidebarLink: {
         label: "Contact",
         href: "/contact",
         openInNewTab: false,
       },
+      rows: [
+        {
+          _type: "homeProjectRow",
+          _key: "row-1",
+          layout: "single",
+          projects: [
+            {
+              _type: "reference",
+              _ref: "project-fashion-show-massimo-dutti-ss25",
+              _key: "row-1-p1",
+            },
+          ],
+        },
+        {
+          _type: "homeProjectRow",
+          _key: "row-2",
+          layout: "pair",
+          projects: [
+            {
+              _type: "reference",
+              _ref: "project-federal-innovation-award",
+              _key: "row-2-p1",
+            },
+            {
+              _type: "reference",
+              _ref: "project-les-tailleurs",
+              _key: "row-2-p2",
+            },
+          ],
+        },
+        {
+          _type: "homeProjectRow",
+          _key: "row-3",
+          layout: "single",
+          projects: [
+            {
+              _type: "reference",
+              _ref: "project-brussels-food-campus",
+              _key: "row-3-p1",
+            },
+          ],
+        },
+      ],
     },
   ],
   seo: {

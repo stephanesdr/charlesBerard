@@ -251,6 +251,30 @@
     @apply m-0 grid list-none p-0 gap-x-5 sm:grid-cols-2;
   }
 
+  .project-index-rows {
+    @apply flex flex-col;
+  }
+
+  .project-index-row {
+    @apply m-0 grid list-none gap-x-5 p-0;
+  }
+
+  .project-index-row-single {
+    @apply grid-cols-1;
+  }
+
+  .project-index-row-pair {
+    @apply sm:grid-cols-2;
+  }
+
+  .project-index-row li {
+    @apply border-b border-border-muted pt-[5px] pb-[18px] sm:pt-5;
+  }
+
+  .project-index-row li a {
+    @apply block h-full text-ink no-underline transition-colors duration-100 hover:text-brand;
+  }
+
   .library-overview-1column .library-column ul {
     @apply m-0 grid list-none p-0 gap-x-5 sm:grid-cols-1;
   }
