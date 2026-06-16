@@ -58,16 +58,14 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
         </div>
       </section>
 
-      {project.gallery && project.gallery.length > 0 && (
-        <section className="layout-grid margin-bottom-l">
-          <div className="content-type-column hidden sm:grid text-sm leading-[1.375]">
-            Galerie
-          </div>
-          <div className="content-column sm:col-span-12">
-            <MediaGallery images={project.gallery} title={project.title} />
-          </div>
-        </section>
-      )}
+      <section className="layout-grid margin-bottom-l">
+        <div className="content-type-column hidden sm:grid text-sm leading-[1.375]">
+          Galerie
+        </div>
+        <div className="content-column sm:col-span-12">
+          <MediaGallery images={project.gallery} title={project.title} />
+        </div>
+      </section>
 
       <section className="layout-grid border-t border-ink/20 pt-5">
         <div className="content-type-column hidden sm:grid text-sm">Navigation</div>
