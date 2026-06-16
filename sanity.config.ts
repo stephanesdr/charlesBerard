@@ -18,7 +18,7 @@ export default defineConfig({
     presentationTool({
       resolve,
       previewUrl: {
-        initial: siteUrl,
+        origin: siteUrl,
         previewMode: {
           enable: "/api/draft-mode/enable",
         },

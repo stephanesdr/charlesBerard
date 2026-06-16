@@ -1,4 +1,4 @@
-import { getQueryClient } from "./getQueryClient";
+import { sanityFetch } from "./live";
 import { isSanityConfigured } from "./env";
 import {
   fallbackAboutPage,
@@ -41,11 +41,11 @@ export async function getProjects(): Promise<Project[]> {
   if (!isSanityConfigured) return fallbackProjects;
 
   try {
-    const sanityClient = await getQueryClient();
-    const projects = await sanityClient.fetch<Project[]>(
-      `*[_type == "project"] | order(orderRank asc, order asc, _createdAt desc) { ${projectFields} }`,
-    );
-    return projects?.length ? projects : fallbackProjects;
+    const { data: projects } = await sanityFetch({
+      query: `*[_type == "project"] | order(orderRank asc, order asc, _createdAt desc) { ${projectFields} }`,
+    });
+    const list = projects as Project[] | null;
+    return list?.length ? list : fallbackProjects;
   } catch {
     return fallbackProjects;
   }
@@ -57,32 +57,34 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
   }
 
   try {
-    const sanityClient = await getQueryClient();
-    const project = await sanityClient.fetch<Project | null>(
-      `*[_type == "project" && slug.current == $slug][0] { ${projectFields} }`,
-      { slug },
-    );
-    return project ?? fallbackProjects.find((p) => p.slug === slug) ?? null;
+    const { data: project } = await sanityFetch({
+      query: `*[_type == "project" && slug.current == $slug][0] { ${projectFields} }`,
+      params: { slug },
+    });
+    const doc = project as Project | null;
+    return doc ?? fallbackProjects.find((p) => p.slug === slug) ?? null;
   } catch {
     return fallbackProjects.find((p) => p.slug === slug) ?? null;
   }
 }
 
-export async function getSiteSettings(): Promise<SiteSettings> {
+export async function getSiteSettings(
+  options?: { stega?: boolean },
+): Promise<SiteSettings> {
   if (!isSanityConfigured) return fallbackSiteSettings;
 
   try {
-    const sanityClient = await getQueryClient();
-    const settings = await sanityClient.fetch<SiteSettings | null>(
-      `*[_type == "siteSettings"][0] {
+    const { data: settings } = await sanityFetch({
+      query: `*[_type == "siteSettings"][0] {
         siteTitle,
         headerNavigation,
         footerText,
         footerLinks,
         seo
       }`,
-    );
-    return settings ?? fallbackSiteSettings;
+      stega: options?.stega ?? false,
+    });
+    return (settings as SiteSettings | null) ?? fallbackSiteSettings;
   } catch {
     return fallbackSiteSettings;
   }
@@ -111,9 +113,10 @@ export async function getHome(): Promise<Home> {
   if (!isSanityConfigured) return fallbackHome;
 
   try {
-    const sanityClient = await getQueryClient();
-    const home = await sanityClient.fetch<Home | null>(homeQuery);
-    return home ?? fallbackHome;
+    const { data: home } = await sanityFetch({
+      query: homeQuery,
+    });
+    return (home as Home | null) ?? fallbackHome;
   } catch {
     return fallbackHome;
   }
@@ -167,18 +170,18 @@ export async function getPageBySlug(slug: string): Promise<Page | null> {
   }
 
   try {
-    const sanityClient = await getQueryClient();
-    const page = await sanityClient.fetch<Page | null>(
-      `*[_type == "page" && slug.current == $slug][0] {
+    const { data: page } = await sanityFetch({
+      query: `*[_type == "page" && slug.current == $slug][0] {
         title,
         "slug": slug.current,
         intro,
         body,
         seo
       }`,
-      { slug },
-    );
-    if (page) return page;
+      params: { slug },
+    });
+    const doc = page as Page | null;
+    if (doc) return doc;
     if (slug === "a-propos") return fallbackAboutPage;
     if (slug === "contact") return fallbackContactPage;
     return null;

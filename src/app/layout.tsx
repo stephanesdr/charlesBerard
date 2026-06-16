@@ -5,6 +5,8 @@ import { Space_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { draftMode } from "next/headers";
 import { VisualEditing } from "next-sanity/visual-editing";
+import { DisableDraftMode } from "@/components/sanity/DisableDraftMode";
+import { SanityLive } from "@/lib/sanity/live";
 
 const spaceMono = Space_Mono({
   subsets: ["latin"],
@@ -41,7 +43,13 @@ export default async function RootLayout({
     >
       <body className="min-h-screen" suppressHydrationWarning>
         {children}
-        {isDraft && <VisualEditing />}
+        <SanityLive />
+        {isDraft && (
+          <>
+            <VisualEditing />
+            <DisableDraftMode />
+          </>
+        )}
       </body>
     </html>
   );

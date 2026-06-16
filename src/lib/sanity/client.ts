@@ -1,5 +1,7 @@
 import { createClient } from "next-sanity";
-import { apiVersion, dataset, projectId } from "./env";
+import { apiVersion, dataset, projectId, siteUrl } from "./env";
+
+const studioUrl = `${siteUrl.replace(/\/$/, "")}/studio`;
 
 export const client = createClient({
   projectId: projectId || "placeholder",
@@ -8,6 +10,6 @@ export const client = createClient({
   useCdn: true,
   stega: {
     enabled: false,
-    studioUrl: "/studio",
+    studioUrl,
   },
 });
