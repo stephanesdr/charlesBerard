@@ -15,7 +15,6 @@ const spaceMono = Space_Mono({
   display: "swap",
 });
 
-
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
   return {
@@ -29,27 +28,14 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const settings = await getSiteSettings();
-
   return (
     <html lang="fr" className={cn("font-sans", spaceMono.variable)}>
-      <body className="min-h-screen">
-        <AnimationOrchestratorProvider>
-          <AreaHeader
-            siteTitle={settings.siteTitle}
-            navigation={settings.headerNavigation ?? []}
-          />
-          <main className="pt-14 sm:pt-12">
-            <SiteContainer>{children}</SiteContainer>
-          </main>
-          <Footer text={settings.footerText} links={settings.footerLinks} />
-        </AnimationOrchestratorProvider>
-      </body>
+      <body className="min-h-screen">{children}</body>
     </html>
   );
 }
