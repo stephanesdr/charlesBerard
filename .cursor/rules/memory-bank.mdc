@@ -1,0 +1,32 @@
+---
+description: Méthodologie Memory Bank (Cline) — lire le contexte projet avant d'agir et le maintenir à jour
+alwaysApply: true
+---
+
+# Memory Bank — Charles Berard
+
+Ce projet utilise une **memory-bank** (`memory-bank/`) selon la méthodologie Cline.
+
+## Début de session
+
+Avant toute tâche non triviale :
+
+1. Lire `memory-bank/memory-bank-instructions.md`
+2. Lire les fichiers core : `projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, `progress.md`
+3. Aligner le plan avec ce contexte
+
+## Pendant le travail
+
+- Respecter les patterns documentés dans `systemPatterns.md` et `techContext.md`
+- Ne pas committer secrets (.env.local, tokens Sanity)
+- Stack : Next.js + Sanity + Tailwind v4 + GSAP, FR, menu area-font, grille Grilli
+
+## Après changements significatifs
+
+Mettre à jour au minimum `activeContext.md` et `progress.md`.
+
+Si l'utilisateur dit **update memory bank** : relire et réviser **tous** les fichiers memory-bank.
+
+## Hiérarchie
+
+`projectbrief` → `productContext` / `systemPatterns` / `techContext` → `activeContext` → `progress`

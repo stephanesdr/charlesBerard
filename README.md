@@ -20,6 +20,23 @@ pnpm dev
 
 Studio : http://localhost:3000/studio
 
+## Memory Bank (Cline)
+
+Contexte persistant pour les agents IA :
+
+```
+memory-bank/
+├── memory-bank-instructions.md  # Lire en premier
+├── projectbrief.md
+├── productContext.md
+├── systemPatterns.md
+├── techContext.md
+├── activeContext.md
+└── progress.md
+```
+
+Commande utile : **update memory bank** — relire et synchroniser tous les fichiers avec l’état du repo.
+
 ## Deploy
 
 Connecté à Vercel + GitHub `stephanesdr/charlesBerard`.
