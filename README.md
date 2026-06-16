@@ -11,12 +11,14 @@ Next.js App Router, Sanity CMS, Tailwind v4, GSAP, Portable Text.
 ```bash
 pnpm install
 cp .env.example .env.local
-# Remplir NEXT_PUBLIC_SANITY_PROJECT_ID et SANITY_API_TOKEN
-pnpm seed
+# Ajouter SANITY_API_TOKEN (write) depuis sanity.io/manage
+pnpm seed   # lit ~/Downloads/Projets Feuille 1.csv par défaut
 pnpm dev
 ```
 
-Studio Sanity : [http://localhost:3000/studio](http://localhost:3000/studio)
+**Projet Sanity** : `x4xhmesz` (dataset `production`)
+
+Studio : http://localhost:3000/studio
 
 ## Deploy
 
