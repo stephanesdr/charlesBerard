@@ -22,7 +22,7 @@ Charles Berard a besoin d’un portfolio professionnel qui présente des projets
 ## Expérience cible
 
 - Lecture fluide, typo sobre, marges générées par `SiteContainer`
-- Home : scan rapide des projets (grille 1→2→3 colonnes)
+- Home : scan rapide des projets — **liste typographique** 1 ou 2 colonnes (style Grilli), pas cartes image
 - Détail : colonne label (services), corps texte large, sidebar résumé, galerie cliquable
 - Menu toujours accessible (fixed header, scroll-hide GSAP)
 - FR partout : titres, labels Studio, metadata

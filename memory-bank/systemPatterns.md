@@ -104,10 +104,14 @@ flowchart TD
 
 ## Routes
 
-| Route | Composant |
-|-------|-----------|
-| `/` | `HomeSections` |
-| `/projets/[slug]` | `ProjectDetail` |
-| `/a-propos` | `PageContent` |
-| `/contact` | `PageContent` |
-| `/studio` | `NextStudio` |
+| Route | Layout | Composant |
+|-------|--------|-----------|
+| `/` | `(site)` | `HomeSections` |
+| `/projets/[slug]` | `(site)` | `ProjectDetail` |
+| `/a-propos` | `(site)` | `PageContent` |
+| `/contact` | `(site)` | `PageContent` |
+| `/studio` | `studio` (h-dvh) | `NextStudio` |
+
+**Route groups** : `(site)/layout.tsx` = `AreaHeader` + `SiteContainer` + `Footer` ; `studio/layout.tsx` = plein écran sans chrome site.
+
+**Studio embedded** : `sanity.config.ts` → `basePath: "/studio"` aligné avec `app/studio/[[...tool]]/page.tsx`.

@@ -37,7 +37,11 @@ Variable CSS : `--font-space-mono` (layout) → `--font-sans` dans `@theme`.
 | `SANITY_API_TOKEN` | Write — seed, local only |
 | `SANITY_API_READ_TOKEN` | Read — optionnel preview |
 
-**Plugins Studio** : `@sanity/orderable-document-list` (ordre projets via `orderRank`)
+**Plugins Studio** : `@sanity/orderable-document-list`, `presentationTool` (`sanity/presentation`)
+
+**Presentation** : `src/sanity/presentation/resolve.ts` — locations home / project / page ; draft mode `/api/draft-mode/enable|disable` ; `SANITY_API_READ_TOKEN` requis en preview
+
+**Embedded Studio** : `basePath: "/studio"` dans `sanity.config.ts` et `sanity.cli.ts` (`project.basePath`) — **obligatoire** avec `app/studio/[[...tool]]/page.tsx`
 
 **CORS** : localhost:3000, charles-berard.vercel.app, `*.vercel.app`
 
@@ -53,11 +57,14 @@ Variable CSS : `--font-space-mono` (layout) → `--font-sans` dans `@theme`.
 pnpm dev          # http://localhost:3000
 pnpm build        # production build
 pnpm seed         # node scripts/seed.mjs
+pnpm patch-order-rank  # backfill orderRank sur projets legacy
 pnpm lint
 ```
 
 Seed CSV par défaut : `~/Downloads/Projets Feuille 1.csv`  
 Override : `CSV_PATH=/path/to.csv node scripts/seed.mjs`
+
+**orderRank** : format seed/patch `0|${100000 + index * 4096}:` — lancer `pnpm patch-order-rank` si docs créés avant le champ
 
 ## Structure repo clé
 
@@ -65,10 +72,17 @@ Override : `CSV_PATH=/path/to.csv node scripts/seed.mjs`
 CharlesBerard/
 ├── memory-bank/           # Contexte persistant (Cline)
 ├── docs/shadcn-registry.md
-├── sanity.config.ts
-├── scripts/seed.mjs
+├── sanity.config.ts       # basePath: "/studio"
+├── sanity.cli.ts
+├── scripts/
+│   ├── seed.mjs
+│   └── patch-order-rank.mjs
 ├── src/
-│   ├── app/               # Routes + globals.css
+│   ├── app/
+│   │   ├── layout.tsx           # html/body racine, suppressHydrationWarning
+│   │   ├── (site)/              # pages publiques + header/footer
+│   │   ├── studio/              # NextStudio plein viewport
+│   │   └── globals.css
 │   ├── components/        # layout, blocks, ui, portable-text, media
 │   ├── lib/sanity/        # client, fetch, fallback, image
 │   ├── lib/animation/
@@ -84,6 +98,7 @@ CharlesBerard/
 - FR uniquement — `lang="fr"` dans layout
 - Placeholders images tant qu’assets non uploadés
 - Classe Tailwind `container` — max 90rem, padding responsive
+- `suppressHydrationWarning` sur `<html>` / `<body>` — extensions navigateur modifient le DOM racine en dev
 
 ## Intégrations futures (phase 2)
 

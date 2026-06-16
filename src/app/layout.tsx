@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { AreaHeader } from "@/components/layout/AreaHeader";
-import { Footer } from "@/components/layout/Footer";
-import { SiteContainer } from "@/components/layout/SiteContainer";
-import { AnimationOrchestratorProvider } from "@/lib/animation/orchestrator";
 import { getSiteSettings } from "@/lib/sanity/fetch";
 import { Space_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { draftMode } from "next/headers";
+import { VisualEditing } from "next-sanity/visual-editing";
 
 const spaceMono = Space_Mono({
   subsets: ["latin"],
@@ -28,14 +26,23 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isDraft = (await draftMode()).isEnabled;
+
   return (
-    <html lang="fr" className={cn("font-sans", spaceMono.variable)}>
-      <body className="min-h-screen">{children}</body>
+    <html
+      lang="fr"
+      className={cn("font-sans", spaceMono.variable)}
+      suppressHydrationWarning
+    >
+      <body className="min-h-screen" suppressHydrationWarning>
+        {children}
+        {isDraft && <VisualEditing />}
+      </body>
     </html>
   );
 }

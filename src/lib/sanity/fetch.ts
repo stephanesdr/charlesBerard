@@ -1,4 +1,4 @@
-import { client } from "./client";
+import { getQueryClient } from "./getQueryClient";
 import { isSanityConfigured } from "./env";
 import {
   fallbackAboutPage,
@@ -41,7 +41,8 @@ export async function getProjects(): Promise<Project[]> {
   if (!isSanityConfigured) return fallbackProjects;
 
   try {
-    const projects = await client.fetch<Project[]>(
+    const sanityClient = await getQueryClient();
+    const projects = await sanityClient.fetch<Project[]>(
       `*[_type == "project"] | order(orderRank asc, order asc, _createdAt desc) { ${projectFields} }`,
     );
     return projects?.length ? projects : fallbackProjects;
@@ -56,7 +57,8 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
   }
 
   try {
-    const project = await client.fetch<Project | null>(
+    const sanityClient = await getQueryClient();
+    const project = await sanityClient.fetch<Project | null>(
       `*[_type == "project" && slug.current == $slug][0] { ${projectFields} }`,
       { slug },
     );
@@ -70,7 +72,8 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   if (!isSanityConfigured) return fallbackSiteSettings;
 
   try {
-    const settings = await client.fetch<SiteSettings | null>(
+    const sanityClient = await getQueryClient();
+    const settings = await sanityClient.fetch<SiteSettings | null>(
       `*[_type == "siteSettings"][0] {
         siteTitle,
         headerNavigation,
@@ -108,7 +111,8 @@ export async function getHome(): Promise<Home> {
   if (!isSanityConfigured) return fallbackHome;
 
   try {
-    const home = await client.fetch<Home | null>(homeQuery);
+    const sanityClient = await getQueryClient();
+    const home = await sanityClient.fetch<Home | null>(homeQuery);
     return home ?? fallbackHome;
   } catch {
     return fallbackHome;
@@ -163,7 +167,8 @@ export async function getPageBySlug(slug: string): Promise<Page | null> {
   }
 
   try {
-    const page = await client.fetch<Page | null>(
+    const sanityClient = await getQueryClient();
+    const page = await sanityClient.fetch<Page | null>(
       `*[_type == "page" && slug.current == $slug][0] {
         title,
         "slug": slug.current,

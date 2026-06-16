@@ -2,27 +2,30 @@
 
 ## Statut global
 
-**V1+ fonctionnel** — site live, CMS page builder home, typo Space Mono.
+**V1+ fonctionnel** — site live, CMS page builder home, Studio embedded corrigé, typo Space Mono.
 
 | Zone | Statut |
 |------|--------|
-| Repo GitHub | ✅ `main` |
+| Repo GitHub | ✅ `main` (commit `a8efa5f` studio routing) |
 | Vercel production | ✅ https://charles-berard.vercel.app |
 | Sanity projet | ✅ `x4xhmesz` / `production` |
 | Seed contenu | ✅ 4 projets + home sections + settings + pages |
-| Studio embedded | ✅ `/studio` + structure + orderable |
+| Studio embedded | ✅ `/studio` + `basePath` + Presentation Tool |
+| orderRank production | ✅ 4 projets patchés |
 | shadcn + Tailwind v4 | ✅ button, container, thème CB |
 | Memory bank | ✅ À jour |
 | Typo Space Mono | ✅ |
+| Hydration warning fix | ⚠️ local (`layout.tsx` — à commit si besoin) |
 
 ## Ce qui fonctionne
 
 - Home : page builder sections (intro + index projets 1/2 col, span wide)
-- Ordre projets : plugin orderable + sélection manuelle home
+- Ordre projets : plugin orderable + `pnpm patch-order-rank` pour legacy docs
 - Détail projet : Portable Text, badge Axe, galerie lightbox
 - À propos / Contact : contenu CMS
-- Header area-font + scroll-hide GSAP
+- Header area-font + scroll-hide GSAP (route group `(site)` uniquement)
 - Grille 14 col + index typographique Grilli
+- Studio : plein écran sans header site (`studio/layout.tsx`)
 - `pnpm build` + deploy Vercel
 - `pnpm seed` depuis CSV
 - Fallback si Sanity env absent
@@ -31,7 +34,7 @@
 
 - Images réelles projet (placeholders)
 - `sanity schema deploy` CLI (SIGABRT local)
-- Contenu Sanity production : peut nécessiter re-seed pour `home.sections`
+- `layout.tsx` suppressHydrationWarning — peut être non commité
 
 ## À faire (backlog)
 
@@ -40,7 +43,7 @@
 - [ ] TypeGen (`pnpm typegen`)
 - [ ] Animations page transition
 - [ ] Domaine custom
-- [ ] `SANITY_API_READ_TOKEN` sur Vercel
+- [ ] `SANITY_API_READ_TOKEN` sur Vercel (requis pour Presentation / draft preview)
 
 ## Problèmes connus
 
@@ -49,6 +52,8 @@
 | Schema deploy CLI SIGABRT | Schéma cloud via CLI | Studio schémas locaux |
 | Pas d’images CMS | Placeholders | Upload Studio |
 | Tokens local only | Seed / write local | sanity.io/manage |
+| Hydration mismatch dev | Warning console | `suppressHydrationWarning` ; ou désactiver extensions (HireCarta) |
+| WebSocket Studio warning | Transitoire | Réseau / onglet background — non bloquant |
 
 ## Historique milestones
 
@@ -60,6 +65,8 @@
 | 2026-06-16 | Memory bank |
 | 2026-06-16 | Home page builder + orderable + shadcn |
 | 2026-06-16 | Space Mono + échelle typo Grilli |
+| 2026-06-16 | Route groups `(site)` / `studio` — layout Studio isolé |
+| 2026-06-16 | Fix `basePath` Studio + patch orderRank + script `patch-order-rank` |
 
 ## Évolution des décisions
 
@@ -67,3 +74,4 @@
 - **Menu** : area-font (vs blazetype)
 - **Index home** : liste typo Grilli, pas cartes image
 - **Font texte** : Space Mono (vs Geist / system)
+- **Studio mount** : `basePath: "/studio"` requis pour embedded Next.js
