@@ -15,7 +15,8 @@ Homepage transposée depuis maisonauge.com : hero, marquee, services, manifeste,
 - **Typo** : stack `"Neue Montreal"` + Inter Tight (fallback tant que `.woff2` absents dans `src/fonts/`)
 - **Sanity** : `project.category`, `homeRows[]` (`homeMediaRow`), `home.projects[]`, `homeManifestoSection` ; `rows` legacy en fallback
 - **Figma** : Home 3 renommé (00–06), collections `color/space/radius/type`, styles Display/H2/Body/Caption/Tag, grille 12 col, composants Caption/Marquee/MediaRow/ProjectHeader
-- Seed CSV v2 : `scripts/templates/projets-v2.csv`
+- **Google Sheet client mis à jour** : onglets `Projets v2` (gid `781421263`, 19 colonnes, 4 projets) + `Structure colonnes` ; `Feuille 1` legacy conservée. Export CSV public → `pnpm seed` (vérifié 0 diff avec le miroir repo)
+- Seed CSV v2 : `scripts/templates/projets-v2.csv` (miroir du Sheet)
 
 ## Décisions actives
 
@@ -32,11 +33,13 @@ Homepage transposée depuis maisonauge.com : hero, marquee, services, manifeste,
 
 ## Prochaines étapes suggérées
 
-1. Déposer `.woff2` Neue Montreal dans `src/fonts/` et basculer `next/font/local`
-2. Upload images couverture + `homeRows` dans Studio
-3. Pages projet / à-propos dans le même système visuel
-4. Domaine custom
-5. Visual Editing / `defineLive`
+1. Client : remplir `cover` / `rowN_media_*` (liens Drive) dans l’onglet `Projets v2`
+2. Plan suivant : seed depuis l’export Sheet + téléchargement/upload des assets vers Sanity (`coverImage`, `homeRows.media`)
+3. Déposer `.woff2` Neue Montreal dans `src/fonts/` et basculer `next/font/local`
+4. Supprimer ou publier le brouillon Studio `drafts.project-fashion-show-massimo-dutti-ss25` (juin, sans champs v2 — écraserait `category`/`homeRows` si publié tel quel)
+5. Pages projet / à-propos dans le même système visuel
+6. Domaine custom
+7. Visual Editing / `defineLive`
 
 ## Patterns à respecter
 
@@ -51,3 +54,4 @@ Homepage transposée depuis maisonauge.com : hero, marquee, services, manifeste,
 
 - `.env.local` — tokens Sanity
 - CSV gabarit : `scripts/templates/projets-v2.csv`
+- Google Sheet client : `1yLcbjm6QTVtzUvIui47mzSf6LQqLyRA6cmYQgnQAUTU` (édition anonyme — ne pas écraser `Feuille 1`)

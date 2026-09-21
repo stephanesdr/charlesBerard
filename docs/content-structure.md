@@ -1,8 +1,24 @@
 # Structure contenu — home & projets
 
-Gabarit Sheet / CSV aligné sur l’index maisonauge (un projet = header sticky + rangées médias). Copie manuelle vers Google Sheets : le fichier n’est pas éditable par outil.
+Structure Sheet / CSV alignée sur l’index maisonauge (un projet = header sticky + rangées médias).
 
-Gabarit : `scripts/templates/projets-v2.csv`
+## Google Sheet client
+
+[Projet copie](https://docs.google.com/spreadsheets/d/1yLcbjm6QTVtzUvIui47mzSf6LQqLyRA6cmYQgnQAUTU/edit) — partage « tous les utilisateurs disposant du lien » (édition anonyme possible).
+
+| Onglet | gid | Rôle |
+|--------|-----|------|
+| `Feuille 1` | `0` | Structure v1 (titre / service / résumé / texte) — legacy, conservée |
+| `Projets v2` | `781421263` | **Source de vérité** — 19 colonnes ci-dessous, 4 projets |
+| `Structure colonnes` | `1167553328` | Mode d’emploi des colonnes pour le client |
+
+Export CSV public (sans connexion) :
+
+```
+https://docs.google.com/spreadsheets/d/1yLcbjm6QTVtzUvIui47mzSf6LQqLyRA6cmYQgnQAUTU/export?format=csv&gid=781421263
+```
+
+Miroir versionné dans le repo : `scripts/templates/projets-v2.csv` (identique à l’onglet `Projets v2` au 2026-09-21).
 
 ## Colonnes
 
@@ -53,8 +69,19 @@ Gabarit : `scripts/templates/projets-v2.csv`
 
 ## Seed
 
+Depuis le miroir repo (défaut) :
+
 ```bash
-CSV_PATH=scripts/templates/projets-v2.csv pnpm seed
+pnpm seed
 ```
 
-Le seed fusionne les champs v2 sans écraser `coverImage` / `gallery` déjà en CMS. Colonnes v1 (`titre,service,résumé,texte`) restent lisibles.
+Depuis le Sheet client (onglet `Projets v2`) :
+
+```bash
+curl -sL "https://docs.google.com/spreadsheets/d/1yLcbjm6QTVtzUvIui47mzSf6LQqLyRA6cmYQgnQAUTU/export?format=csv&gid=781421263" -o /tmp/projets-v2.csv
+CSV_PATH=/tmp/projets-v2.csv pnpm seed
+```
+
+Le seed fusionne les champs v2 sans écraser `coverImage` / `gallery` / `homeRows.media` déjà en CMS. Colonnes v1 (`titre,service,résumé,texte`) restent lisibles. Les colonnes `cover` / `rowN_media_*` (liens) ne sont pas encore importées — prochain plan : téléchargement des assets + upload Sanity.
+
+Attention CSV : toute valeur contenant une virgule doit être entre guillemets (Sheets le fait automatiquement à l’export).

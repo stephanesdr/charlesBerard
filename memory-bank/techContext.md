@@ -64,7 +64,8 @@ pnpm lint
 ```
 
 Seed CSV par défaut : `scripts/templates/projets-v2.csv`  
-Override : `CSV_PATH=/path/to.csv node scripts/seed.mjs`
+Override : `CSV_PATH=/path/to.csv node scripts/seed.mjs`  
+Depuis le Sheet client : export public `…/export?format=csv&gid=781421263` → `CSV_PATH` (voir `docs/content-structure.md`)
 
 **orderRank** : format seed/patch `0|${100000 + index * 4096}:` — lancer `pnpm patch-order-rank` si docs créés avant le champ
 

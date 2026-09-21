@@ -10,6 +10,7 @@
 | Vercel production | ✅ https://charles-berard.vercel.app |
 | Sanity projet | ✅ `x4xhmesz` / `production` |
 | Seed contenu | ✅ CSV v2 + `homeRows` / `projects[]` / manifeste |
+| Google Sheet client | ✅ Onglets `Projets v2` + `Structure colonnes` — export CSV → seed OK |
 | Home index sticky | ✅ `ProjectIndex` + rangées médias 1\|2 |
 | Playwright e2e | ✅ desktop 1440 + mobile 390 (12 specs) |
 | Tokens + Neue Montreal stack | ✅ fallback Inter Tight |
@@ -36,7 +37,9 @@
 
 ## À faire (backlog)
 
-- [ ] Assets images par projet + médias `homeRows` dans Sanity
+- [ ] Client : liens `cover` / `rowN_media_*` dans le Sheet `Projets v2`
+- [ ] Seed assets : télécharger les liens Sheet → upload Sanity (`coverImage`, `homeRows.media`)
+- [ ] Nettoyer le brouillon `drafts.project-fashion-show-massimo-dutti-ss25` (juin, pré-v2)
 - [ ] `next/font/local` une fois les woff2 fournis
 - [ ] Visual Editing / `defineLive`
 - [ ] TypeGen (`pnpm typegen`)
