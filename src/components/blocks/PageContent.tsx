@@ -21,7 +21,7 @@ export async function PageContent({ slug }: PageContentProps) {
   if (!page) return null;
 
   return (
-    <article className="layout-grid mb-5">
+    <article className="container layout-grid mb-5">
       <div className="content-type-column">{page.title}</div>
       <div className="content-column">
         <h1 className="mb-4 text-2xl font-normal leading-tight lg:text-3xl">

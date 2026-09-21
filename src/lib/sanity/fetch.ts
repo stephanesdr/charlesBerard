@@ -7,9 +7,12 @@ import {
   fallbackProjects,
   fallbackSiteSettings,
   type Home,
+  type HomeMediaRow,
   type HomeSection,
+  type MediaRowLayout,
   type Page,
   type Project,
+  type ResolvedHomeProject,
   type ResolvedHomeProjectIndexSection,
   type ResolvedHomeProjectRow,
   type RowLayout,
@@ -20,17 +23,39 @@ const projectListFields = `
   _id,
   title,
   "slug": slug.current,
-  projectStatus
+  projectStatus,
+  category,
+  client,
+  year,
+  services,
+  summary,
+  coverImage,
+  gallery,
+  homeRows[]{
+    _key,
+    layout,
+    caption,
+    media
+  }
 `;
 
 const projectFields = `
   _id,
   title,
   "slug": slug.current,
+  category,
+  client,
+  year,
   services,
   summary,
   body,
   coverImage,
+  homeRows[]{
+    _key,
+    layout,
+    caption,
+    media
+  },
   gallery,
   projectStatus,
   orderRank,
@@ -93,11 +118,14 @@ export async function getSiteSettings(
 
 const homeQuery = `*[_type == "home"][0] {
   title,
+  heroTitle,
+  marqueeText,
   sections[]{
     _type,
     _key,
     label,
     text,
+    "projects": projects[]->{ ${projectListFields} },
     rows[]{
       _key,
       layout,
@@ -128,6 +156,75 @@ export async function getHome(): Promise<Home> {
   }
 }
 
+function normalizeMediaRow(
+  row: HomeMediaRow,
+  fallbackKey: string,
+): HomeMediaRow {
+  const layout: MediaRowLayout = row.layout === "pair" ? "pair" : "single";
+  const media = (row.media ?? []).filter(Boolean);
+  return {
+    _key: row._key || fallbackKey,
+    layout,
+    media: layout === "pair" ? media.slice(0, 2) : media.slice(0, 1),
+    caption: row.caption ?? null,
+  };
+}
+
+export function synthesizeHomeRows(
+  project: Project,
+  index: number,
+): HomeMediaRow[] {
+  if (project.homeRows?.length) {
+    return project.homeRows.map((row, rowIndex) =>
+      normalizeMediaRow(row, `${project._id}-row-${rowIndex}`),
+    );
+  }
+
+  const startWithSingle = index % 2 === 0;
+  const cover = project.coverImage ? [project.coverImage] : [];
+  const gallery = (project.gallery ?? []).filter(Boolean).slice(0, 2);
+  const caption = project.summary ?? null;
+
+  return startWithSingle
+    ? [
+        {
+          _key: `${project._id}-r1`,
+          layout: "single",
+          media: cover,
+          caption,
+        },
+        {
+          _key: `${project._id}-r2`,
+          layout: "pair",
+          media: gallery,
+          caption: null,
+        },
+      ]
+    : [
+        {
+          _key: `${project._id}-r1`,
+          layout: "pair",
+          media: gallery,
+          caption: null,
+        },
+        {
+          _key: `${project._id}-r2`,
+          layout: "single",
+          media: cover,
+          caption,
+        },
+      ];
+}
+
+function uniqueProjects(projects: Project[]): Project[] {
+  const seen = new Set<string>();
+  return projects.filter((project) => {
+    if (!project?._id || seen.has(project._id)) return false;
+    seen.add(project._id);
+    return true;
+  });
+}
+
 export function resolveHomeSections(
   sections: HomeSection[] | undefined,
   allProjects: Project[],
@@ -138,8 +235,13 @@ export function resolveHomeSections(
     if (section._type !== "homeProjectIndexSection") return section;
 
     let resolvedRows: ResolvedHomeProjectRow[] = [];
+    let orderedProjects: Project[] = [];
 
-    if (section.rows?.length) {
+    if (section.projects?.length) {
+      orderedProjects = uniqueProjects(
+        section.projects.filter((project) => project?._id),
+      );
+    } else if (section.rows?.length) {
       resolvedRows = section.rows
         .map((row) => {
           const projects =
@@ -157,6 +259,9 @@ export function resolveHomeSections(
           };
         })
         .filter((row): row is ResolvedHomeProjectRow => row !== null);
+      orderedProjects = uniqueProjects(
+        resolvedRows.flatMap((row) => row.projects),
+      );
     } else if (section.items?.length) {
       resolvedRows = section.items
         .filter((item) => item.project?._id)
@@ -165,7 +270,11 @@ export function resolveHomeSections(
           layout: "single" as RowLayout,
           projects: [item.project!],
         }));
-    } else if (section.projectSource === "all") {
+      orderedProjects = uniqueProjects(
+        resolvedRows.flatMap((row) => row.projects),
+      );
+    } else {
+      orderedProjects = allProjects;
       resolvedRows = allProjects.map((project) => ({
         _key: project._id,
         layout: "single" as RowLayout,
@@ -173,11 +282,52 @@ export function resolveHomeSections(
       }));
     }
 
+    if (!resolvedRows.length) {
+      resolvedRows = orderedProjects.map((project) => ({
+        _key: project._id,
+        layout: "single" as RowLayout,
+        projects: [project],
+      }));
+    }
+
+    const resolvedProjects: ResolvedHomeProject[] = orderedProjects.map(
+      (project, index) => ({
+        project,
+        rows: synthesizeHomeRows(project, index),
+      }),
+    );
+
     return {
       ...section,
       resolvedRows,
+      resolvedProjects,
     } satisfies ResolvedHomeProjectIndexSection;
   });
+}
+
+function ensureHomeSections(sections: HomeSection[]): HomeSection[] {
+  const next = [...sections];
+
+  if (!next.some((section) => section._type === "homeIntroSection")) {
+    const intro = fallbackHome.sections?.find(
+      (section) => section._type === "homeIntroSection",
+    );
+    if (intro) next.unshift(intro);
+  }
+
+  if (!next.some((section) => section._type === "homeManifestoSection")) {
+    const manifesto = fallbackHome.sections?.find(
+      (section) => section._type === "homeManifestoSection",
+    );
+    const index = next.findIndex(
+      (section) => section._type === "homeProjectIndexSection",
+    );
+    if (manifesto) {
+      next.splice(index === -1 ? next.length : index, 0, manifesto);
+    }
+  }
+
+  return next;
 }
 
 export async function getHomePageData(): Promise<{
@@ -187,7 +337,10 @@ export async function getHomePageData(): Promise<{
   const [home, projects] = await Promise.all([getHome(), getProjects()]);
   const rawSections =
     home.sections?.length ? home.sections : fallbackHome.sections ?? [];
-  const sections = resolveHomeSections(rawSections, projects);
+  const sections = resolveHomeSections(
+    ensureHomeSections(rawSections),
+    projects,
+  );
   return { home, sections };
 }
 

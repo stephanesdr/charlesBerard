@@ -16,21 +16,27 @@ type MediaProps = {
   lightbox?: boolean;
   placeholderLabel?: string;
   sizes?: string;
+  ratio?: string;
+  fill?: boolean;
+  loading?: "lazy" | "eager";
 };
 
 function PlaceholderImage({
   label,
   className,
+  fill,
 }: {
   label: string;
   className?: string;
+  fill?: boolean;
 }) {
   return (
     <div
       className={cn(
-        "flex aspect-[4/3] w-full items-center justify-center",
-        "bg-gradient-to-br from-neutral-200 via-neutral-100 to-neutral-300",
-        "text-xs font-bold uppercase tracking-widest text-ink/40",
+        "flex items-center justify-center",
+        "bg-gradient-to-br from-ink/10 via-violet-10 to-accent-green/20",
+        "font-tag font-bold uppercase tracking-[0.6px] text-ink/40",
+        fill ? "absolute inset-0 h-full w-full" : "aspect-[4/3] w-full",
         className,
       )}
       aria-label={`Image placeholder — ${label}`}
@@ -48,12 +54,26 @@ export function Media({
   lightbox = false,
   placeholderLabel = "Image",
   sizes = "(max-width: 768px) 100vw, 66vw",
+  ratio,
+  fill = false,
+  loading,
 }: MediaProps) {
   const [open, setOpen] = useState(false);
   const hasAsset = image?.asset?._ref;
+  const resolvedAlt = alt || image?.alt || placeholderLabel;
+  const aspectStyle = ratio && !fill ? { aspectRatio: ratio.replace("/", " / ") } : undefined;
 
   if (!hasAsset) {
-    return <PlaceholderImage label={placeholderLabel} className={className} />;
+    if (fill) {
+      return (
+        <PlaceholderImage label={placeholderLabel} className={className} fill />
+      );
+    }
+    return (
+      <div style={aspectStyle} className="relative w-full overflow-hidden">
+        <PlaceholderImage label={placeholderLabel} className={className} />
+      </div>
+    );
   }
 
   const src = urlFor(image).width(1600).auto("format").url();
@@ -62,15 +82,28 @@ export function Media({
       ? { blurDataURL: image.lqip, placeholder: "blur" as const }
       : undefined;
 
-  const img = (
+  const img = fill ? (
     <Image
       src={src}
-      alt={alt || image.alt || placeholderLabel}
+      alt={resolvedAlt}
+      fill
+      sizes={sizes}
+      priority={priority}
+      loading={priority ? undefined : loading ?? "lazy"}
+      className={cn("object-cover", className)}
+      {...blur}
+    />
+  ) : (
+    <Image
+      src={src}
+      alt={resolvedAlt}
       width={1600}
       height={1200}
       sizes={sizes}
       priority={priority}
+      loading={priority ? undefined : loading ?? "lazy"}
       className={cn("h-auto w-full object-cover", className)}
+      style={aspectStyle}
       {...blur}
     />
   );
@@ -81,16 +114,16 @@ export function Media({
     <>
       <button
         type="button"
-        className="block w-full cursor-zoom-in border-0 bg-transparent p-0"
+        className="relative block h-full w-full cursor-zoom-in border-0 bg-transparent p-0"
         onClick={() => setOpen(true)}
-        aria-label="Ouvrir en plein écran"
+        aria-label={`Ouvrir ${resolvedAlt} en plein écran`}
       >
         {img}
       </button>
       <Lightbox
         open={open}
         close={() => setOpen(false)}
-        slides={[{ src, alt: alt || image.alt || placeholderLabel }]}
+        slides={[{ src, alt: resolvedAlt }]}
       />
     </>
   );

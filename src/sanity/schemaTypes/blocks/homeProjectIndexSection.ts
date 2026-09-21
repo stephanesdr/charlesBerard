@@ -14,19 +14,38 @@ export const homeProjectIndexSection = defineType({
       initialValue: "Projets",
     }),
     defineField({
+      name: "projects",
+      title: "Projets (index)",
+      type: "array",
+      of: [
+        defineArrayMember({
+          type: "reference",
+          to: [{ type: "project" }],
+        }),
+      ],
+      description:
+        "Ordre des blocs sticky sur la home. Chaque projet expose ses rangées médias (homeRows).",
+    }),
+    defineField({
       name: "rows",
-      title: "Lignes",
+      title: "Lignes (legacy)",
       type: "array",
       of: [defineArrayMember({ type: "homeProjectRow" })],
-      description:
-        "Empilez des lignes : 1 projet ou 2 projets côte à côte. L’ordre définit l’index sur la page.",
+      hidden: true,
+      deprecated: {
+        reason:
+          "Utiliser `projects` : un projet = un bloc sticky + rangées médias.",
+      },
     }),
     defineField({
       name: "showSidebar",
       title: "Afficher la colonne latérale",
       type: "boolean",
-      initialValue: true,
-      description: "Colonne droite (compteur + lien), comme grillitype.com.",
+      initialValue: false,
+      hidden: true,
+      deprecated: {
+        reason: "L’index sticky n’utilise plus de colonne latérale Grilli.",
+      },
     }),
     defineField({
       name: "sidebarLink",
@@ -61,17 +80,13 @@ export const homeProjectIndexSection = defineType({
   preview: {
     select: {
       label: "label",
-      rows: "rows",
+      projects: "projects",
     },
-    prepare({ label, rows }) {
-      const count = rows?.length ?? 0;
-      const pairCount =
-        rows?.filter((row: { layout?: string }) => row.layout === "pair").length ?? 0;
-      const pairHint = pairCount > 0 ? ` · ${pairCount} double(s)` : "";
-
+    prepare({ label, projects }) {
+      const count = projects?.length ?? 0;
       return {
         title: label || "Index projets",
-        subtitle: `${count} ligne${count > 1 ? "s" : ""}${pairHint}`,
+        subtitle: `${count} projet${count > 1 ? "s" : ""}`,
       };
     },
   },

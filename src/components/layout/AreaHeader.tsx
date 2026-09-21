@@ -56,7 +56,7 @@ export function AreaHeader({ siteTitle, navigation }: AreaHeaderProps) {
         href="/"
         className={cn(
           "text-base font-bold leading-none text-ink no-underline",
-          "transition-colors duration-150 hover:text-brand",
+          "transition-colors duration-150 hover:text-accent-violet",
         )}
       >
         {siteTitle}

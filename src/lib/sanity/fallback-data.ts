@@ -9,14 +9,27 @@ export type SanityImage = {
   lqip?: string;
 };
 
+export type MediaRowLayout = "single" | "pair";
+
+export type HomeMediaRow = {
+  _key: string;
+  layout: MediaRowLayout;
+  media?: SanityImage[];
+  caption?: string | null;
+};
+
 export type Project = {
   _id: string;
   title: string;
   slug: string;
+  category?: string | null;
+  client?: string | null;
+  year?: string | null;
   services?: string[];
   summary?: string;
   body?: PortableTextBlock[];
   coverImage?: SanityImage;
+  homeRows?: HomeMediaRow[];
   gallery?: SanityImage[];
   projectStatus?: ProjectStatus;
   orderRank?: string;
@@ -59,6 +72,13 @@ export type HomeIntroSection = {
   text?: string;
 };
 
+export type HomeManifestoSection = {
+  _type: "homeManifestoSection";
+  _key: string;
+  label?: string;
+  text?: string;
+};
+
 export type HomeProjectRow = {
   _key: string;
   _type?: "homeProjectRow";
@@ -75,10 +95,11 @@ export type HomeProjectIndexSection = {
   _type: "homeProjectIndexSection";
   _key: string;
   label?: string;
+  projects?: Project[];
   rows?: HomeProjectRow[];
-  /** @deprecated Utiliser `rows` */
+  /** @deprecated Utiliser `projects` */
   columnLayout?: ColumnLayout;
-  /** @deprecated Utiliser `rows` */
+  /** @deprecated Utiliser `projects` */
   projectSource?: ProjectSource;
   showSidebar?: boolean;
   sidebarLink?: {
@@ -86,8 +107,13 @@ export type HomeProjectIndexSection = {
     href: string;
     openInNewTab?: boolean;
   };
-  /** @deprecated Utiliser `rows` */
+  /** @deprecated Utiliser `projects` */
   items?: HomeProjectIndexItem[];
+};
+
+export type ResolvedHomeProject = {
+  project: Project;
+  rows: HomeMediaRow[];
 };
 
 export type ResolvedHomeProjectRow = {
@@ -98,15 +124,19 @@ export type ResolvedHomeProjectRow = {
 
 export type ResolvedHomeProjectIndexSection = HomeProjectIndexSection & {
   resolvedRows: ResolvedHomeProjectRow[];
+  resolvedProjects: ResolvedHomeProject[];
 };
 
 export type HomeSection =
   | HomeIntroSection
+  | HomeManifestoSection
   | HomeProjectIndexSection
   | ResolvedHomeProjectIndexSection;
 
 export type Home = {
   title?: string;
+  heroTitle?: string | null;
+  marqueeText?: string | null;
   sections?: HomeSection[];
   seo?: { title?: string; description?: string };
 };
@@ -136,6 +166,9 @@ export const fallbackProjects: Project[] = [
     _id: "project-massimo-dutti",
     title: "Fashion Show Massimo Dutti SS25",
     slug: "fashion-show-massimo-dutti-ss25",
+    category: "Identité — Print",
+    client: "Massimo Dutti",
+    year: "2025",
     services: [
       "Direction graphique",
       "conception",
@@ -155,6 +188,9 @@ export const fallbackProjects: Project[] = [
     _id: "project-federal-innovation",
     title: "Federal Innovation Award",
     slug: "federal-innovation-award",
+    category: "Identité — Scénographie",
+    client: "SPF BOSA",
+    year: "2026",
     services: [
       "Direction graphique",
       "identité",
@@ -174,6 +210,9 @@ export const fallbackProjects: Project[] = [
     _id: "project-les-tailleurs",
     title: "Les Tailleurs",
     slug: "les-tailleurs",
+    category: "Identité — Affiche",
+    client: "Les Tailleurs",
+    year: "2019",
     services: [
       "Identité",
       "logo",
@@ -195,6 +234,9 @@ export const fallbackProjects: Project[] = [
     _id: "project-brussels-food-campus",
     title: "Brussels Food Campus",
     slug: "brussels-food-campus",
+    category: "Naming — Identité",
+    client: "Belgian Foundation for Food Sciences",
+    year: "2024",
     services: [
       "Naming",
       "identité",
@@ -213,34 +255,82 @@ export const fallbackProjects: Project[] = [
   },
 ];
 
-function buildFallbackHomeSections(): HomeSection[] {
-  const introText =
-    "Direction graphique, identité et conception pour des projets culturels, institutionnels et événementiels.";
+function fallbackMediaRows(
+  project: Project,
+  index: number,
+  caption: string,
+): HomeMediaRow[] {
+  const startWithSingle = index % 2 === 0;
+  const cover = project.coverImage ? [project.coverImage] : [];
+  const gallery = project.gallery?.slice(0, 2) ?? [];
 
+  return startWithSingle
+    ? [
+        {
+          _key: `${project._id}-r1`,
+          layout: "single",
+          media: cover,
+          caption,
+        },
+        {
+          _key: `${project._id}-r2`,
+          layout: "pair",
+          media: gallery,
+          caption: null,
+        },
+      ]
+    : [
+        {
+          _key: `${project._id}-r1`,
+          layout: "pair",
+          media: gallery,
+          caption: null,
+        },
+        {
+          _key: `${project._id}-r2`,
+          layout: "single",
+          media: cover,
+          caption,
+        },
+      ];
+}
+
+function buildFallbackHomeSections(): HomeSection[] {
   const [p1, p2, p3, p4] = fallbackProjects;
+  const captions = [
+    "Presskit et papeterie événementielle.",
+    "Identité et trophée.",
+    "Affiche et identité du festival.",
+    "Logo et contre-formes.",
+  ];
 
   return [
     {
       _type: "homeIntroSection",
-      _key: "intro",
-      label: "Intro",
-      text: introText,
+      _key: "services",
+      label: "Services",
+      text: "Defining brand strategy. — Translating trends into tangible touchpoints and communication strategies. — Shaping multichannel brand experiences that engage, inspire and accelerate positive change through distinctive positioning. — Designing smart print and visual identities that consumers notice, desire and remember. — Telling brand stories. — Crafting websites. — Leading creative teams and facilitating co-creation.",
+    },
+    {
+      _type: "homeManifestoSection",
+      _key: "manifesto",
+      label: "Manifeste",
+      text: "Seeking meaning is our most reckless obsession. Yet form only achieves beauty when purpose gives it shape. Isn’t that beautiful?",
     },
     {
       _type: "homeProjectIndexSection",
       _key: "projects",
       label: "Projets",
-      showSidebar: true,
-      sidebarLink: {
-        label: "Contact",
-        href: "/contact",
-        openInNewTab: false,
-      },
+      projects: [p1, p2, p3, p4],
       resolvedRows: [
         { _key: "row-1", layout: "single", projects: [p1] },
         { _key: "row-2", layout: "pair", projects: [p2, p3] },
         { _key: "row-3", layout: "single", projects: [p4] },
       ],
+      resolvedProjects: [p1, p2, p3, p4].map((project, index) => ({
+        project,
+        rows: fallbackMediaRows(project, index, captions[index] ?? ""),
+      })),
     },
   ];
 }
@@ -268,6 +358,8 @@ export const fallbackSiteSettings: SiteSettings = {
 
 export const fallbackHome: Home = {
   title: "Accueil",
+  heroTitle: "Charles Bérard",
+  marqueeText: "Charles Bérard, brand designer & creative director",
   sections: buildFallbackHomeSections(),
   seo: {
     title: "Charles Berard — Direction graphique",

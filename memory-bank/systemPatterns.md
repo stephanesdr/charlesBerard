@@ -8,10 +8,11 @@ flowchart TB
     Layout[layout.tsx + container]
     Home[HomeSections]
     Pages[projets / a-propos / contact]
-    Blocks[HomeProjectIndexSection / ProjectDetail / PageContent]
+    Blocks[ProjectIndex sticky / ProjectDetail / PageContent]
     PT[CustomPortableText]
     Media[Media + Lightbox]
     Header[AreaHeader GSAP]
+    Lenis[SmoothScroll Lenis]
   end
 
   subgraph cms [Sanity]
@@ -27,6 +28,7 @@ flowchart TB
 
   Home --> Fetch
   Pages --> Fetch
+  Home --> Lenis
   Fetch -->|env| SanityAPI[Sanity CDN/API]
   Fetch -->|sinon| Fallback
   Studio --> Docs
@@ -55,26 +57,29 @@ flowchart TD
 - `.library-overview-1column` / `-2columns` : index projets
 - `.project-index-wide` : span 2 cols en grille 2 col
 
-### Typographie (grillitype.com + Space Mono)
+### Typographie (Neue Montreal)
 
 | Utility | Usage |
 |---------|--------|
-| `font-sans` (body) | 16px / 1.375 |
-| `font-label` | Labels colonne, sidebar |
-| `font-m` | Intro, lead texte |
-| `font-xxl` | Index projets (vw scale) |
+| `font-display` | Hero `h1` |
+| `font-h2` | Titres projet, services |
+| `font-body` | Manifeste, texte courant |
+| `font-caption` | Légendes médias |
+| `font-tag` | Catégories, nav, marquee |
+| `font-m` / `font-label` | Pages projet / à-propos (legacy Grilli) |
+
+### Home page builder
+
+- `getHomePageData()` → `ensureHomeSections()` + `resolveHomeSections()`
+- `home.projects[]` → blocs sticky ; `rows` / `items` legacy en fallback
+- `project.homeRows[]` (`single` \| `pair`) ; synthèse depuis cover/gallery si vide
+- Composants : `HeroTitle`, `SiteMarquee`, `ServicesStatement`, `ManifestoBox`, `ProjectIndex`, `ProjectBlock`, `ProjectMediaRow`, `HomeFooter`
 
 ### Navigation area-font
 
 - `AreaHeader` : `buttonVariants` navPrimary / navSecondary
 - Scroll-hide GSAP
 - Font 16px bold
-
-### Home page builder
-
-- `getHomePageData()` → `resolveHomeSections()`
-- `projectSource: all` → ordre `orderRank` global
-- `projectSource: manual` → array `items` + `listSpan`
 
 ### Portable Text / Media / Animations
 
@@ -89,8 +94,10 @@ flowchart TD
 | `project` | Portfolio + `orderRank` |
 | `page` | À propos, Contact |
 | `home` | Singleton, `sections[]` page builder |
-| `homeIntroSection` | Bloc intro |
-| `homeProjectIndexSection` | Index projets configurable |
+| `homeIntroSection` | Bloc services (uppercase) |
+| `homeManifestoSection` | Box manifeste |
+| `homeProjectIndexSection` | Index sticky (`projects[]`, `rows` legacy) |
+| `homeMediaRow` | Rangée médias d’un projet |
 | `siteSettings` | Nav, footer, SEO |
 
 **Structure Studio** : Accueil → Paramètres → Projets (ordre) → autres types

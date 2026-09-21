@@ -2,59 +2,58 @@
 
 ## Statut global
 
-**V1+ fonctionnel** — site live, CMS page builder home, Studio embedded corrigé, typo Space Mono.
+**Home maisonauge livrée** — index sticky, tokens Figma, Playwright e2e, seed CSV v2.
 
 | Zone | Statut |
 |------|--------|
-| Repo GitHub | ✅ `main` (commit `a8efa5f` studio routing) |
+| Repo GitHub | 🔄 push `main` après commits de session |
 | Vercel production | ✅ https://charles-berard.vercel.app |
 | Sanity projet | ✅ `x4xhmesz` / `production` |
-| Seed contenu | ✅ 4 projets + home sections + settings + pages |
-| Home index lignes | ✅ `homeProjectRow` (1 ou 2 projets par ligne) |
-| Presentation preview | ✅ Sans refresh loop en draft |
-| orderRank production | ✅ 4 projets patchés |
-| shadcn + Tailwind v4 | ✅ button, container, thème CB |
+| Seed contenu | ✅ CSV v2 + `homeRows` / `projects[]` / manifeste |
+| Home index sticky | ✅ `ProjectIndex` + rangées médias 1\|2 |
+| Playwright e2e | ✅ desktop 1440 + mobile 390 (12 specs) |
+| Tokens + Neue Montreal stack | ✅ fallback Inter Tight |
+| Figma Home 3 | ✅ nommage, variables, grille 12, composants |
 | Memory bank | ✅ À jour |
-| Typo Space Mono | ✅ |
-| Hydration warning fix | ⚠️ local (`layout.tsx` — à commit si besoin) |
 
 ## Ce qui fonctionne
 
-- Home : page builder sections (intro + index projets 1/2 col, span wide)
-- Ordre projets : plugin orderable + `pnpm patch-order-rank` pour legacy docs
+- Home : hero (`h1`), marquee fixe, services, manifeste, index sticky, footer violet-10
+- Index : colonne gauche sticky (titre `h2`, catégorie, cover 2:3), rangées single/pair + légende
+- Lenis + GSAP ScrollTrigger (parallax, split chars/mots, reduced-motion)
 - Détail projet : Portable Text, badge Axe, galerie lightbox
 - À propos / Contact : contenu CMS
-- Header area-font + scroll-hide GSAP (route group `(site)` uniquement)
-- Grille 14 col + index typographique Grilli
-- Studio : plein écran sans header site (`studio/layout.tsx`)
-- `pnpm build` + deploy Vercel
-- `pnpm seed` depuis CSV
-- Fallback si Sanity env absent
+- Header pills violet/vert (area-font)
+- Studio embedded `/studio`
+- `pnpm build` + `pnpm test:e2e` + `pnpm seed`
+- Fallback si Sanity env absent ; manifesto injecté si absent du CMS
 
 ## En cours / partiel
 
-- Images réelles projet (placeholders)
+- Fichiers `.woff2` Neue Montreal à fournir (`src/fonts/README.md`)
+- Images réelles projet (placeholders si pas d’asset)
 - `sanity schema deploy` CLI (SIGABRT local)
-- `layout.tsx` suppressHydrationWarning — peut être non commité
 
 ## À faire (backlog)
 
-- [ ] Assets images par projet dans Sanity
+- [ ] Assets images par projet + médias `homeRows` dans Sanity
+- [ ] `next/font/local` une fois les woff2 fournis
 - [ ] Visual Editing / `defineLive`
 - [ ] TypeGen (`pnpm typegen`)
-- [ ] Animations page transition
+- [ ] Pages projet dans le même langage visuel
 - [ ] Domaine custom
-- [ ] Preview env vars sur Vercel (cocher Preview dans le dashboard)
+- [ ] Preview env vars sur Vercel
 
 ## Problèmes connus
 
 | Issue | Impact | Mitigation |
 |-------|--------|------------|
 | Schema deploy CLI SIGABRT | Schéma cloud via CLI | Studio schémas locaux |
+| Pas de woff2 Neue Montreal | Fallback Inter Tight | `src/fonts/` + `next/font/local` |
 | Pas d’images CMS | Placeholders | Upload Studio |
 | Tokens local only | Seed / write local | sanity.io/manage |
-| Hydration mismatch dev | Warning console | `suppressHydrationWarning` ; ou désactiver extensions (HireCarta) |
-| WebSocket Studio warning | Transitoire | Réseau / onglet background — non bloquant |
+| Sticky + overflow iOS | Safari | wrapper sans overflow hidden |
+| Hydration mismatch dev | Warning console | `suppressHydrationWarning` |
 
 ## Historique milestones
 
@@ -66,13 +65,15 @@
 | 2026-06-16 | Memory bank |
 | 2026-06-16 | Home page builder + orderable + shadcn |
 | 2026-06-16 | Space Mono + échelle typo Grilli |
-| 2026-06-16 | Route groups `(site)` / `studio` — layout Studio isolé |
-| 2026-06-16 | Fix `basePath` Studio + patch orderRank + script `patch-order-rank` |
+| 2026-06-16 | Route groups `(site)` / `studio` |
+| 2026-06-16 | Fix `basePath` Studio + patch orderRank |
+| 2026-06-21 | Transposition homepage maisonauge + Playwright + Figma tokens |
 
 ## Évolution des décisions
 
 - **Framework** : Next.js (vs TanStack Start)
 - **Menu** : area-font (vs blazetype)
-- **Index home** : liste typo Grilli, pas cartes image
-- **Font texte** : Space Mono (vs Geist / system)
+- **Index home** : sticky maisonauge (plus liste typo Grilli)
+- **Font** : Neue Montreal (Inter Tight fallback) vs Space Mono
+- **Palette** : surface/ink/violet/green (rouge `brand` secondaire)
 - **Studio mount** : `basePath: "/studio"` requis pour embedded Next.js

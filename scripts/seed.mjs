@@ -53,13 +53,16 @@ const client = createClient({
   useCdn: false,
 });
 
-const defaultCsvPath = resolve(
+const defaultCsvPath = resolve(root, "scripts/templates/projets-v2.csv");
+const legacyCsvPath = resolve(
   process.env.HOME || "",
   "Downloads/Projets Feuille 1.csv",
 );
 const csvPath = process.env.CSV_PATH
   ? resolve(process.env.CSV_PATH)
-  : defaultCsvPath;
+  : existsSync(defaultCsvPath)
+    ? defaultCsvPath
+    : legacyCsvPath;
 
 function slugify(title) {
   return title
@@ -137,6 +140,22 @@ function parseCsv(content) {
   return rows;
 }
 
+function cell(colIndex, cells, ...names) {
+  for (const name of names) {
+    const index = colIndex[name];
+    if (index !== undefined && index !== null) {
+      return (cells[index] ?? "").trim();
+    }
+  }
+  return "";
+}
+
+function parseRowLayout(value) {
+  const raw = value.trim().toLowerCase();
+  if (raw === "2" || raw === "pair") return "pair";
+  return "single";
+}
+
 function parseProjectsFromCsv(path) {
   if (!existsSync(path)) {
     throw new Error(`CSV not found: ${path}`);
@@ -151,33 +170,66 @@ function parseProjectsFromCsv(path) {
   );
 
   return dataRows.map((cells, order) => {
-    const title = cells[colIndex.titre]?.trim() ?? "";
-    const serviceRaw = cells[colIndex.service]?.trim() ?? "";
-    const summary = cells[colIndex["résumé"] ?? colIndex.resume]?.trim() ?? "";
-    const texte = cells[colIndex.texte]?.trim() ?? "";
+    const title = cell(colIndex, cells, "titre", "title");
+    const slugRaw = cell(colIndex, cells, "slug");
+    const serviceRaw = cell(colIndex, cells, "services", "service");
+    const summary = cell(colIndex, cells, "résumé", "resume");
+    const texte = cell(colIndex, cells, "texte", "text");
+    const category = cell(colIndex, cells, "catégorie", "categorie", "category");
+    const client = cell(colIndex, cells, "client");
+    const year = cell(colIndex, cells, "année", "annee", "year");
+    const statut = cell(colIndex, cells, "statut", "status");
+    const orderRaw = cell(colIndex, cells, "ordre", "order");
 
     const services = serviceRaw
       .split(",")
       .map((s) => s.trim())
       .filter(Boolean);
 
-    const slug = slugify(title);
+    const slug = slugRaw || slugify(title);
     const isConcept =
+      /axe/i.test(statut) ||
       /n'a pas su voir le jour|n'a pas vu le jour|non réalisé/i.test(
         summary + texte,
       );
+
+    const homeRows = [1, 2]
+      .map((n) => {
+        const type = cell(colIndex, cells, `row${n}_type`);
+        const caption = cell(
+          colIndex,
+          cells,
+          `row${n}_legende`,
+          `row${n}_caption`,
+        );
+        if (!type && !caption) return null;
+        return {
+          _type: "homeMediaRow",
+          _key: `row${n}`,
+          layout: parseRowLayout(type || "1"),
+          caption: caption || undefined,
+        };
+      })
+      .filter(Boolean);
+
+    const parsedOrder = Number.parseInt(orderRaw, 10);
+    const resolvedOrder = Number.isFinite(parsedOrder) ? parsedOrder : order;
 
     return {
       _id: `project-${slug}`,
       _type: "project",
       title,
       slug: { _type: "slug", current: slug },
+      category: category || undefined,
+      client: client || undefined,
+      year: year || undefined,
       services,
       summary,
       body: textToBlocks(texte),
+      homeRows,
       projectStatus: isConcept ? "concept" : "realized",
-      order,
-      orderRank: `0|${String(100000 + order * 4096).padStart(6, "0")}:`,
+      order: resolvedOrder,
+      orderRank: `0|${String(100000 + resolvedOrder * 4096).padStart(6, "0")}:`,
     };
   });
 }
@@ -219,24 +271,48 @@ const home = {
   _id: "home",
   _type: "home",
   title: "Accueil",
+  heroTitle: "Charles Bérard",
+  marqueeText: "Charles Bérard, brand designer & creative director",
   sections: [
     {
       _type: "homeIntroSection",
-      _key: "intro",
-      label: "Intro",
+      _key: "services",
+      label: "Services",
       text:
-        "Direction graphique, identité et conception pour des projets culturels, institutionnels et événementiels.",
+        "Defining brand strategy. — Translating trends into tangible touchpoints and communication strategies. — Shaping multichannel brand experiences that engage, inspire and accelerate positive change through distinctive positioning. — Designing smart print and visual identities that consumers notice, desire and remember. — Telling brand stories. — Crafting websites. — Leading creative teams and facilitating co-creation.",
+    },
+    {
+      _type: "homeManifestoSection",
+      _key: "manifesto",
+      label: "Manifeste",
+      text: "Seeking meaning is our most reckless obsession. Yet form only achieves beauty when purpose gives it shape. Isn’t that beautiful?",
     },
     {
       _type: "homeProjectIndexSection",
       _key: "projects",
       label: "Projets",
-      showSidebar: true,
-      sidebarLink: {
-        label: "Contact",
-        href: "/contact",
-        openInNewTab: false,
-      },
+      projects: [
+        {
+          _type: "reference",
+          _ref: "project-fashion-show-massimo-dutti-ss25",
+          _key: "p-massimo",
+        },
+        {
+          _type: "reference",
+          _ref: "project-federal-innovation-award",
+          _key: "p-federal",
+        },
+        {
+          _type: "reference",
+          _ref: "project-les-tailleurs",
+          _key: "p-tailleurs",
+        },
+        {
+          _type: "reference",
+          _ref: "project-brussels-food-campus",
+          _key: "p-bfc",
+        },
+      ],
       rows: [
         {
           _type: "homeProjectRow",
@@ -332,7 +408,14 @@ async function seed() {
   await client.createOrReplace(contactPage);
 
   for (const project of projects) {
-    await client.createOrReplace(project);
+    const existing = await client.getDocument(project._id).catch(() => null);
+    await client.createOrReplace({
+      ...project,
+      coverImage: existing?.coverImage,
+      gallery: existing?.gallery,
+      homeRows:
+        project.homeRows?.length ? project.homeRows : existing?.homeRows,
+    });
     console.log("  ✓", project.title, `(${project.projectStatus})`);
   }
 

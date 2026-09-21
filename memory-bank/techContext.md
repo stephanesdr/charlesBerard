@@ -8,7 +8,8 @@
 | CMS | Sanity v6 embedded | Studio `/studio` |
 | Styling | Tailwind CSS v4 | `@import "tailwindcss"`, tokens dans `globals.css` |
 | UI | shadcn base-nova | `button` + thème CB dans `globals.css` |
-| Animation | GSAP + `@gsap/react` | ScrollTrigger pour reveals |
+| Animation | GSAP + `@gsap/react` + Lenis | ScrollTrigger + scrollerProxy ; pas d’overflow hidden html/body |
+| Tests | Playwright | `pnpm test:e2e` — desktop 1440, mobile 390 |
 | Rich text | `@portabletext/react` | |
 | Lightbox | `yet-another-react-lightbox` | |
 | Package manager | pnpm | |
@@ -17,15 +18,14 @@
 
 ## Typographie
 
-| Élément | Font | Échelle (ref. grillitype.com) |
-|---------|------|-------------------------------|
-| Texte global | **Space Mono** (Google Fonts, `next/font`) | 16px / lh 1.375 |
-| Labels colonne (`font-label`) | Space Mono | 16px / lh 1.375 |
-| Intro / lead (`font-m`) | Space Mono | 20px (1.25rem) / lh 1.35 |
-| Index projets (`font-xxl`) | Space Mono | 10.375vw → 5.1875vw → 3.32vw, lh 1, tracking -0.015em |
-| Nav header | Space Mono bold | 16px |
+| Élément | Font | Échelle |
+|---------|------|---------|
+| Stack global | **Neue Montreal** + Inter Tight fallback | Body 22px / lh 1.3 |
+| Display | `font-display` | clamp 3rem–156px / lh 1.2 |
+| H2 | `font-h2` | 30px |
+| Caption / Tag | `font-caption` / `font-tag` | 20px / 12px tracking 0.6 |
 
-Variable CSS : `--font-space-mono` (layout) → `--font-sans` dans `@theme`.
+Variable CSS : `--font-inter-tight` (layout) ; `font-family` commence par `"Neue Montreal"`. Woff2 à placer dans `src/fonts/`.
 
 ## Sanity
 
@@ -56,12 +56,14 @@ Variable CSS : `--font-space-mono` (layout) → `--font-sans` dans `@theme`.
 ```bash
 pnpm dev          # http://localhost:3000
 pnpm build        # production build
-pnpm seed         # node scripts/seed.mjs
+pnpm seed         # node scripts/seed.mjs (CSV v2 par défaut)
+pnpm test:e2e     # Playwright desktop + mobile
+pnpm test:e2e:home  # e2e sans spec @reference
 pnpm patch-order-rank  # backfill orderRank sur projets legacy
 pnpm lint
 ```
 
-Seed CSV par défaut : `~/Downloads/Projets Feuille 1.csv`  
+Seed CSV par défaut : `scripts/templates/projets-v2.csv`  
 Override : `CSV_PATH=/path/to.csv node scripts/seed.mjs`
 
 **orderRank** : format seed/patch `0|${100000 + index * 4096}:` — lancer `pnpm patch-order-rank` si docs créés avant le champ
@@ -76,7 +78,9 @@ CharlesBerard/
 ├── sanity.cli.ts
 ├── scripts/
 │   ├── seed.mjs
-│   └── patch-order-rank.mjs
+│   └── templates/projets-v2.csv
+├── tests/e2e/           # Playwright
+├── docs/                # audit référence + structure contenu
 ├── src/
 │   ├── app/
 │   │   ├── layout.tsx           # html/body racine, suppressHydrationWarning

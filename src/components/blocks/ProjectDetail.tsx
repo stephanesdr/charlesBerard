@@ -10,7 +10,7 @@ type ProjectDetailProps = {
 
 export function ProjectDetail({ project }: ProjectDetailProps) {
   return (
-    <article className="mb-5">
+    <article className="container mb-5">
       <section
         className={cn(
           "layout-grid highlight-img-txtnarrow",

@@ -5,6 +5,12 @@
     },
     "vercel": {
       "enabled": true
+    },
+    "playwright": {
+      "enabled": true
+    },
+    "figma": {
+      "enabled": true
     }
   }
 }

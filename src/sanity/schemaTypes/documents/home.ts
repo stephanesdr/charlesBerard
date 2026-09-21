@@ -14,11 +14,24 @@ export const home = defineType({
       initialValue: "Accueil",
     }),
     defineField({
+      name: "heroTitle",
+      title: "Titre hero",
+      type: "string",
+      initialValue: "Charles Bérard",
+    }),
+    defineField({
+      name: "marqueeText",
+      title: "Texte marquee",
+      type: "string",
+      initialValue: "Charles Bérard, brand designer & creative director",
+    }),
+    defineField({
       name: "sections",
       title: "Sections",
       type: "array",
       of: [
         defineArrayMember({ type: "homeIntroSection" }),
+        defineArrayMember({ type: "homeManifestoSection" }),
         defineArrayMember({ type: "homeProjectIndexSection" }),
       ],
       options: {

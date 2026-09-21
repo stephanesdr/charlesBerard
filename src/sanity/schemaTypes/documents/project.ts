@@ -23,6 +23,22 @@ export const project = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "category",
+      title: "Catégorie",
+      type: "string",
+      description: "Label court pour l’index home, ex. « Identité — Print ».",
+    }),
+    defineField({
+      name: "client",
+      title: "Client",
+      type: "string",
+    }),
+    defineField({
+      name: "year",
+      title: "Année",
+      type: "string",
+    }),
+    defineField({
       name: "services",
       title: "Services",
       type: "array",
@@ -44,6 +60,16 @@ export const project = defineType({
       title: "Image de couverture",
       type: "image",
       options: { hotspot: true },
+      validation: (rule) =>
+        rule.required().warning("Requise pour l’index home (ratio 2:3)."),
+    }),
+    defineField({
+      name: "homeRows",
+      title: "Rangées médias (home)",
+      type: "array",
+      of: [defineArrayMember({ type: "homeMediaRow" })],
+      description:
+        "Index home : une ou deux rangées (1 média ou 2 médias + légende). Alternance automatique si vide.",
     }),
     defineField({
       name: "gallery",

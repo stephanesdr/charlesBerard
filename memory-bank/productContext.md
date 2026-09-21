@@ -21,8 +21,9 @@ Charles Berard a besoin d’un portfolio professionnel qui présente des projets
 
 ## Expérience cible
 
-- Lecture fluide, typo sobre, marges générées par `SiteContainer`
-- Home : scan rapide des projets — **liste typographique** 1 ou 2 colonnes (style Grilli), pas cartes image
+- Lecture fluide, typo Neue Montreal (fallback Inter Tight), fond `surface` rose
+- Home : **index sticky par projet** (réf. maisonauge.com) — titre/catégorie/cover à gauche, rangées 1|2 médias à droite
+- Marquee fixe en bas, services uppercase, manifeste encadré, footer `violet-10`
 - Détail : colonne label (services), corps texte large, sidebar résumé, galerie cliquable
 - Menu toujours accessible (fixed header, scroll-hide GSAP)
 - FR partout : titres, labels Studio, metadata

@@ -20,14 +20,14 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         /* Charles Berard — nav area-font */
         navPrimary:
-          "rounded-none border-transparent bg-brand text-surface hover:bg-brand/90",
+          "rounded-full border-transparent bg-accent-violet text-surface hover:bg-accent-violet/90",
         navSecondary:
-          "rounded-none border border-ink/20 bg-surface/80 text-ink hover:border-brand hover:text-brand",
+          "rounded-full border-transparent bg-accent-green text-ink hover:bg-accent-green/90",
       },
       size: {
         default:
           "h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        nav: "h-auto gap-0 rounded-none px-3 py-2 text-xs font-bold leading-none sm:px-4 sm:text-sm",
+        nav: "h-auto gap-0 rounded-full px-4 py-2 text-xs font-bold uppercase leading-none tracking-[0.6px] sm:px-5 sm:text-sm",
         xs: "h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
         sm: "h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
         lg: "h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",

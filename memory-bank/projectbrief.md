@@ -7,14 +7,14 @@ Portfolio éditorial pour **Charles Berard**, direction graphique indépendante 
 ## Objectifs
 
 1. **Portfolio CMS** — Projets éditables via Sanity Studio, contenu seed depuis CSV client.
-2. **Référence visuelle contenu** — Grille et mise en page inspirée de [grillitype.com](https://www.grillitype.com/) (14 colonnes, labels, hiérarchie éditoriale).
-3. **Référence navigation** — Header style [area-font.eu](https://area-font.eu/) (boutons fixes, pas menu hamburger Blaze Type).
+2. **Référence visuelle home** — [maisonauge.com](https://maisonauge.com/) (index sticky + rangées médias) et Figma Home 3.
+3. **Référence navigation** — Header style [area-font.eu](https://area-font.eu/) (boutons pills, pas hamburger).
 4. **Langue** — Français uniquement (FR).
 5. **Déploiement** — Vercel + GitHub, domaine Vercel pour l’instant.
 
 ## Périmètre V1 (livré)
 
-- Home : liste projets en grille
+- Home : hero, marquee, services, manifeste, index sticky + rangées médias
 - Pages projet `/projets/[slug]` avec Portable Text + galerie lightbox
 - Pages `/a-propos` et `/contact` (contenu CMS + seed)
 - Sanity embedded Studio `/studio`
@@ -31,7 +31,8 @@ Portfolio éditorial pour **Charles Berard**, direction graphique indépendante 
 
 ## Sources de vérité contenu
 
-- CSV client : `Projets Feuille 1.csv` (4 projets)
+- Gabarit CSV : `scripts/templates/projets-v2.csv`
+- Analyse référence : `docs/reference-analysis-maisonauge.md`
 - Sanity dataset `production` sur projet `x4xhmesz`
 - Fallback local : `src/lib/sanity/fallback-data.ts` (build sans env)
 
