@@ -14,7 +14,7 @@ export function HomeFooter({
   return (
     <footer
       data-home-section="footer"
-      className="bg-violet-10 px-5 py-16 text-ink lg:px-20"
+      className="bg-violet-10 px-5 pt-16 pb-[calc(4rem+100px)] text-ink lg:px-20"
     >
       <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
         <div>
