@@ -223,13 +223,11 @@
   line-height: var(--text-m--line-height);
 }
 
-@font-face {
-  font-family: "Neue Montreal";
-  src: local("Inter Tight"), local("Inter Tight Fallback");
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-}
+/*
+ * "PP Neue Montreal" n'est pas encore embarquée (licence web à confirmer).
+ * En local, la police installée (FontBase) est utilisée ; ailleurs → Inter Tight.
+ * Cible : next/font/local depuis src/fonts/*.woff2 (voir src/fonts/README.md).
+ */
 
 @utility font-label {
   font-size: var(--text-label);
@@ -241,22 +239,21 @@
     @apply border-border outline-ring/50;
   }
 
+  /* Pas d'overflow sur html/body : garde le scroll natif et le sticky de l'index. */
   html {
     @apply font-sans;
-    overflow: auto;
   }
 
   body {
     @apply antialiased;
     background-color: var(--color-surface);
     color: var(--color-ink);
-    font-family: "Neue Montreal", "PP Neue Montreal", var(--font-inter-tight),
-      ui-sans-serif, system-ui, sans-serif;
+    font-family: "PP Neue Montreal", var(--font-inter-tight), ui-sans-serif,
+      system-ui, sans-serif;
     font-size: var(--text-body);
     line-height: var(--text-body--line-height);
     font-kerning: normal;
     font-feature-settings: "kern", "pnum";
-    overflow: auto;
   }
 }
 

@@ -9,8 +9,8 @@ test.describe("home quality", () => {
       html: getComputedStyle(document.documentElement).overflow,
       body: getComputedStyle(document.body).overflow,
     }));
-    expect(overflow.html).not.toMatch(/hidden/i);
-    expect(overflow.body).not.toMatch(/hidden/i);
+    expect(overflow.html).toBe("visible");
+    expect(overflow.body).toBe("visible");
 
     const imageAudit = await page.evaluate(() => {
       const images = Array.from(document.querySelectorAll("img"));

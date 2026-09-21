@@ -42,10 +42,10 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body
-        className="min-h-screen overflow-auto bg-surface text-ink"
+        className="min-h-screen bg-surface text-ink"
         style={{
           fontFamily:
-            '"Neue Montreal", "PP Neue Montreal", var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif',
+            '"PP Neue Montreal", var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif',
           backgroundColor: "#fef5f9",
           color: "#212a37",
         }}

@@ -23,7 +23,7 @@ export function ProjectBlock({ item, priority = false }: ProjectBlockProps) {
   return (
     <article
       data-project-block
-      className="relative flex min-h-[200dvh] flex-col gap-12 px-5 py-section-y lg:flex-row lg:gap-16 lg:px-20"
+      className="relative flex min-h-[200dvh] flex-col gap-12 px-5 py-section-y lg:flex-row lg:gap-16 lg:px-20 lg:py-0"
     >
       <header
         data-project-header
@@ -54,7 +54,7 @@ export function ProjectBlock({ item, priority = false }: ProjectBlockProps) {
         </Link>
       </header>
 
-      <div className="flex w-full flex-col gap-section-y lg:w-7/12 lg:pt-[10dvh]">
+      <div className="flex w-full flex-col gap-section-y lg:w-7/12 lg:py-section-y">
         {rows.map((row) => (
           <ProjectMediaRow
             key={row._key}

@@ -36,17 +36,29 @@ test.describe("home project index", () => {
     }
 
     const header = blocks.first().locator("[data-project-header]");
-    await header.scrollIntoViewIfNeeded();
-    const blockBox = await blocks.first().boundingBox();
-    expect(blockBox).toBeTruthy();
-    await page.evaluate((offset) => {
-      window.scrollBy(0, offset);
-    }, Math.round((blockBox?.height ?? 900) * 0.4));
-    await page.waitForTimeout(400);
+    await expect(header).toHaveCSS("position", "sticky");
 
-    const stickyTop = await header.evaluate(
-      (el) => el.getBoundingClientRect().top,
-    );
-    expect(stickyTop).toBeLessThan(8);
+    const overflow = await page.evaluate(() => ({
+      html: getComputedStyle(document.documentElement).overflow,
+      body: getComputedStyle(document.body).overflow,
+    }));
+    expect(overflow.html).toBe("visible");
+    expect(overflow.body).toBe("visible");
+
+    const measure = await blocks.first().evaluate(async (block) => {
+      const top = block.getBoundingClientRect().top + window.scrollY;
+      const height = block.getBoundingClientRect().height;
+      window.scrollTo(0, Math.round(top + height * 0.45));
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      const header = block.querySelector("[data-project-header]");
+      return {
+        blockTop: block.getBoundingClientRect().top,
+        headerTop: header?.getBoundingClientRect().top ?? NaN,
+      };
+    });
+
+    expect(measure.blockTop).toBeLessThan(-100);
+    expect(measure.headerTop).toBeGreaterThanOrEqual(-1);
+    expect(measure.headerTop).toBeLessThanOrEqual(8);
   });
 });

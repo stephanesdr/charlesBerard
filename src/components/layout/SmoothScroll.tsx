@@ -23,10 +23,9 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
         anchors: true,
       });
 
+      // Lenis ne doit jamais verrouiller le scroll natif (a11y + sticky index).
       document.documentElement.style.removeProperty("overflow");
       document.body.style.removeProperty("overflow");
-      document.documentElement.style.overflow = "auto";
-      document.body.style.overflow = "auto";
 
       const onScroll = () => ScrollTrigger.update();
       lenis.on("scroll", onScroll);
