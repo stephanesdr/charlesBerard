@@ -10,7 +10,7 @@ Charles Berard a besoin d’un portfolio professionnel qui présente des projets
 |----------|----------|
 | Contenu dispersé (CSV, textes longs) | CMS Sanity + seed automatisé |
 | Mise en page rigide | Grille 14 col éditoriale, labels CMS |
-| Navigation trop « e-commerce » | Header area-font : boutons fixes Projets / À propos / Contact |
+| Navigation trop « e-commerce » | Header area-font : boutons fixes HOME / ABOUT |
 | Projets « axe » vs réalisés | Champ `projectStatus` : `realized` \| `concept` avec badge UI |
 | Pas d’images finalisées | Placeholders gradient + lightbox prête pour assets |
 
@@ -22,11 +22,12 @@ Charles Berard a besoin d’un portfolio professionnel qui présente des projets
 ## Expérience cible
 
 - Lecture fluide, typo Neue Montreal (fallback Inter Tight), fond `surface` rose
-- Home : **index sticky par projet** (réf. maisonauge.com) — titre/catégorie/cover à gauche, rangées 1|2 médias à droite
+- Home : média intro image/vidéo, puis **index sticky par projet** (réf. maisonauge.com) — titre/catégorie/cover à gauche, rangées 1|2 médias à droite
 - Marquee fixe en bas, services uppercase, manifeste encadré, footer `violet-10`
 - Détail : colonne label (services), corps texte large, sidebar résumé, galerie cliquable
 - Menu toujours accessible (fixed header, scroll-hide GSAP)
-- FR partout : titres, labels Studio, metadata
+- Interface publique et URLs en anglais ; contenu éditorial CMS à traduire séparément
+- Covers projet statiques par défaut ; liens activables par variable Vercel
 
 ## Contenu initial (4 projets)
 
@@ -37,5 +38,5 @@ Charles Berard a besoin d’un portfolio professionnel qui présente des projets
 
 ## Pages éditoriales
 
-- **À propos** — bio direction graphique, périmètre de travail
+- **About** (`/about`) — bio direction graphique, périmètre de travail
 - **Contact** — email, localisation Bruxelles, types de missions

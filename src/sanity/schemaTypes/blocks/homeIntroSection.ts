@@ -20,6 +20,13 @@ export const homeIntroSection = defineType({
       rows: 4,
       validation: (rule) => rule.required(),
     }),
+    defineField({
+      name: "media",
+      title: "Intro media",
+      type: "homeIntroMedia",
+      description:
+        "Large image or silent looping video displayed before the intro statement.",
+    }),
   ],
   preview: {
     select: { title: "label", text: "text" },

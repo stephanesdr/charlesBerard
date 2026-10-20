@@ -9,6 +9,7 @@
 | Styling | Tailwind CSS v4 | `@import "tailwindcss"`, tokens dans `globals.css` |
 | UI | shadcn base-nova | `button` + thème CB dans `globals.css` |
 | Animation | GSAP + `@gsap/react` + Lenis | ScrollTrigger + scrollerProxy ; pas d’overflow hidden html/body |
+| WebGL | Three.js 0.186 | Hero About local, texture Canvas et shader pointer |
 | Tests | Playwright | `pnpm test:e2e` — desktop 1440, mobile 390 |
 | Rich text | `@portabletext/react` | |
 | Lightbox | `yet-another-react-lightbox` | |
@@ -36,6 +37,7 @@ Variable CSS : `--font-inter-tight` (layout) ; `font-family` commence par `"Neue
 | `NEXT_PUBLIC_SANITY_API_VERSION` | `2025-01-01` |
 | `SANITY_API_TOKEN` | Write — seed, local only |
 | `SANITY_API_READ_TOKEN` | Read — optionnel preview |
+| `PROJECT_LINKS_ENABLED` | `false` par défaut ; active les liens cover vers les détails projet |
 
 **Plugins Studio** : `@sanity/orderable-document-list`, `presentationTool` (`sanity/presentation`)
 
@@ -88,7 +90,7 @@ CharlesBerard/
 │   │   ├── (site)/              # pages publiques + header/footer
 │   │   ├── studio/              # NextStudio plein viewport
 │   │   └── globals.css
-│   ├── components/        # layout, blocks, ui, portable-text, media
+│   ├── components/        # layout, blocks, about/shader, ui, portable-text, media
 │   ├── lib/sanity/        # client, fetch, fallback, image
 │   ├── lib/animation/
 │   ├── sanity/schemaTypes/blocks/  # home page builder
@@ -100,9 +102,10 @@ CharlesBerard/
 
 - Build doit passer **sans** `.env.local` (fallback data)
 - Images Sanity : `cdn.sanity.io` dans `next.config.ts` remotePatterns
-- FR uniquement — `lang="fr"` dans layout
+- Interface publique en anglais — `lang="en"` dans le layout
 - Placeholders images tant qu’assets non uploadés
 - Classe Tailwind `container` — max 90rem, padding responsive
+- WebGL About : DPR ≤ 1.75, RAF suspendu hors viewport, fallback reduced-motion
 - `suppressHydrationWarning` sur `<html>` / `<body>` — extensions navigateur modifient le DOM racine en dev
 
 ## Intégrations futures (phase 2)

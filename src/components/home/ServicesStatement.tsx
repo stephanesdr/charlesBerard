@@ -43,11 +43,11 @@ export function ServicesStatement({ text }: ServicesStatementProps) {
     <section
       ref={rootRef}
       data-home-section="services"
-      className="px-5 py-section-y lg:px-20"
+      className="container py-section-y"
     >
       <p
         aria-label={text}
-        className="font-h2 m-0 max-w-[70rem] uppercase text-ink"
+        className="font-h2 m-0 w-full uppercase text-ink"
       >
         <span aria-hidden="true">
           {words.map((word, index) => (

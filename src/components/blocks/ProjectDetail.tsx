@@ -18,7 +18,7 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
         )}
       >
         <div className="content-type-column">
-          {project.services?.join(", ") || "Projet"}
+          {project.services?.join(", ") || "Project"}
         </div>
         <div className="content-column">
           <h1 className="mb-4 text-2xl font-normal leading-tight text-ink lg:text-3xl">
@@ -26,7 +26,7 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
           </h1>
           {project.projectStatus === "concept" && (
             <p className="mb-4 text-xs font-bold uppercase tracking-wide text-ink/50">
-              Axe — travail présenté, projet non sélectionné
+              Concept — proposal presented, project not selected
             </p>
           )}
           <Media
@@ -50,14 +50,14 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
       </section>
 
       <section className="layout-grid mb-5">
-        <div className="content-type-column">Texte</div>
+        <div className="content-type-column">Text</div>
         <div className="content-column">
           <CustomPortableText value={project.body} />
         </div>
       </section>
 
       <section className="layout-grid mb-5">
-        <div className="content-type-column">Galerie</div>
+        <div className="content-type-column">Gallery</div>
         <div className="content-column">
           <MediaGallery images={project.gallery} title={project.title} />
         </div>
@@ -70,7 +70,7 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
             href="/"
             className="text-sm font-bold text-ink no-underline transition-colors hover:text-brand"
           >
-            ← Tous les projets
+            ← All projects
           </Link>
         </div>
       </section>

@@ -65,7 +65,9 @@ export function ProjectMediaRow({ row, projectTitle }: ProjectMediaRowProps) {
             className={cn(
               "relative overflow-hidden",
               isPair && "flex-1",
-              isPair && index === 1 && "-translate-y-0 lg:-translate-y-section-y",
+              isPair &&
+                index === 1 &&
+                "-translate-y-0 lg:-translate-y-project-row-stagger",
             )}
             style={{ aspectRatio: ratio }}
           >
@@ -75,7 +77,7 @@ export function ProjectMediaRow({ row, projectTitle }: ProjectMediaRowProps) {
                 fill
                 ratio={ratio}
                 placeholderLabel={projectTitle}
-                alt={`${projectTitle} — média ${index + 1}`}
+                alt={`${projectTitle} — media ${index + 1}`}
                 sizes={
                   isPair
                     ? "(max-width: 1100px) 50vw, 30vw"

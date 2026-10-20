@@ -48,7 +48,7 @@ function PlaceholderImage({
 
 export function Media({
   image,
-  alt = "",
+  alt,
   priority = false,
   className,
   lightbox = false,
@@ -60,7 +60,7 @@ export function Media({
 }: MediaProps) {
   const [open, setOpen] = useState(false);
   const hasAsset = image?.asset?._ref;
-  const resolvedAlt = alt || image?.alt || placeholderLabel;
+  const resolvedAlt = alt ?? image?.alt ?? placeholderLabel;
   const aspectStyle = ratio && !fill ? { aspectRatio: ratio.replace("/", " / ") } : undefined;
 
   if (!hasAsset) {
@@ -116,7 +116,7 @@ export function Media({
         type="button"
         className="relative block h-full w-full cursor-zoom-in border-0 bg-transparent p-0"
         onClick={() => setOpen(true)}
-        aria-label={`Ouvrir ${resolvedAlt} en plein écran`}
+        aria-label={`Open ${resolvedAlt} in fullscreen`}
       >
         {img}
       </button>
@@ -149,8 +149,8 @@ export function MediaGallery({ images, title }: MediaGalleryProps) {
   if (!slides.length) {
     return (
       <div className="grid gap-5 grid-cols-1 sm:grid-cols-2">
-        <PlaceholderImage label={title || "Galerie"} />
-        <PlaceholderImage label={title || "Galerie"} />
+        <PlaceholderImage label={title || "Gallery"} />
+        <PlaceholderImage label={title || "Gallery"} />
       </div>
     );
   }

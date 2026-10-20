@@ -1,5 +1,4 @@
 import type { MetadataRoute } from "next";
-import { fallbackProjects } from "@/lib/sanity/fallback-data";
 import { getProjects } from "@/lib/sanity/fetch";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -15,7 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     { url: baseUrl, lastModified: new Date() },
-    { url: `${baseUrl}/a-propos`, lastModified: new Date() },
+    { url: `${baseUrl}/about`, lastModified: new Date() },
     { url: `${baseUrl}/contact`, lastModified: new Date() },
     ...projectUrls,
   ];

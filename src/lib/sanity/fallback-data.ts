@@ -11,6 +11,14 @@ export type SanityImage = {
 
 export type MediaRowLayout = "single" | "pair";
 
+export type HomeIntroMedia = {
+  kind: "image" | "video";
+  image?: SanityImage | null;
+  poster?: SanityImage | null;
+  videoUrl?: string | null;
+  alt?: string | null;
+};
+
 export type HomeMediaRow = {
   _key: string;
   layout: MediaRowLayout;
@@ -34,7 +42,11 @@ export type Project = {
   projectStatus?: ProjectStatus;
   orderRank?: string;
   order?: number;
-  seo?: { title?: string; description?: string };
+  seo?: {
+    title?: string;
+    description?: string;
+    ogImage?: SanityImage;
+  };
 };
 
 export type NavigationItem = {
@@ -52,11 +64,32 @@ export type SiteSettings = {
   seo?: { title?: string; description?: string };
 };
 
+export type AboutEditorialSection = {
+  _key: string;
+  title: string;
+  body?: PortableTextBlock[];
+};
+
+export type AboutContent = {
+  heroLines: [string, string] | string[];
+  standfirst: string;
+  clients: string;
+  sections: AboutEditorialSection[];
+  manifesto: string;
+  closing: string;
+  footer: {
+    tagline: string;
+    phone?: string | null;
+    email?: string | null;
+  };
+};
+
 export type Page = {
   title: string;
   slug: string;
   intro?: string;
   body?: PortableTextBlock[];
+  about?: AboutContent | null;
   seo?: { title?: string; description?: string };
 };
 
@@ -70,6 +103,7 @@ export type HomeIntroSection = {
   _key: string;
   label?: string;
   text?: string;
+  media?: HomeIntroMedia | null;
 };
 
 export type HomeManifestoSection = {
@@ -160,6 +194,147 @@ function textToBlocks(text: string): PortableTextBlock[] {
       ],
     }));
 }
+
+function aboutBlock(
+  key: string,
+  text: string,
+  options?: {
+    style?: "normal" | "h3";
+    listItem?: "bullet";
+    strong?: boolean;
+  },
+): PortableTextBlock {
+  return {
+    _type: "block",
+    _key: key,
+    style: options?.style ?? "normal",
+    markDefs: [],
+    children: [
+      {
+        _type: "span",
+        _key: `${key}-span`,
+        text,
+        marks: options?.strong ? ["strong"] : [],
+      },
+    ],
+    ...(options?.listItem
+      ? { listItem: options.listItem, level: 1 }
+      : {}),
+  };
+}
+
+const fallbackAboutContent: AboutContent = {
+  heroLines: ["CHARLES", "BéRARD"],
+  standfirst:
+    "Brand & creative designer for 17 years. I work across the whole creative chain, from concept to rollout, connecting branding, UX, motion and AI into coherent systems that make sense at every touchpoint.",
+  clients:
+    "Client : Loewe, KTM, (re)space, Cartier, Massimo Dutti, Zara, Inditex, Easyfairs, Batibouw, Tandem, Les 3 Vallées, Wolfers, Maje, Puig, Spotify, Royal Museums of Fine Arts of Belgium, Ruinart, Mettet, Cornette de Saint Cyr, Azar, ESF, ULiège, European Commission, IBA, Belfius, The Shy Guy, Griffé, Casarose, Instore, Radio Contact, Agoria, Evaux, Playlabel Records, Fami-QS, Animal Law, M. Lascar, Jet Import, Les Tailleurs Festival, Terramezza, ESIMAP, LKQ, visit.brussels, Atrium, FISA, …",
+  sections: [
+    {
+      _key: "approach",
+      title: "Bringing experiences to life through image.",
+      body: [
+        aboutBlock("approach-title", "Approach", { style: "h3" }),
+        aboutBlock(
+          "approach-1",
+          "Built on solid graphic-design foundations, my practice has spread across many disciplines, with real agility in visual creation. I started in a publishing house, co-founded a graphic studio (Feelink Studio) and now work in an events agency.",
+        ),
+        aboutBlock(
+          "approach-2",
+          "From paper to Figma, I work across media to translate each message as precisely as possible: concept, typography, print, web design, production, management, automation, UX, motion. AI (Google AI Studio, NotebookLM, Weavy) has just joined my workflow, to push creative limits further. I’ve done this every day for 17 years. I love it, especially when the challenge is shared within a team.",
+        ),
+      ],
+    },
+    {
+      _key: "skills",
+      title: "Skills",
+      body: [
+        aboutBlock("strengths-title", "Strengths", { style: "h3" }),
+        ...[
+          "Brand & strategy",
+          "Positioning & copy",
+          "Naming, storytelling, concept",
+          "Typography, layout",
+          "Web design, UX, social media",
+          "AI & generative design",
+          "Print & paper",
+        ].map((text, index) =>
+          aboutBlock(`strength-${index}`, text, { listItem: "bullet" }),
+        ),
+        aboutBlock("tools-title", "Tools", { style: "h3" }),
+        aboutBlock(
+          "tools",
+          "InDesign, Photoshop, Illustrator, After Effects, Figma, Cavalry, Jitter, Office, Google AI Studio, NotebookLM, Weavy, …",
+        ),
+        aboutBlock("education-title", "Education", { style: "h3" }),
+        ...[
+          "2025 — English course and AI training.",
+          "2009 — Bachelor in Graphic Communication, with distinction. École de l’Art de l’Image Le 75, Brussels.",
+          "2005 — Upper secondary diploma, technical qualification in computer graphics, with distinction. Collège de Court-Saint-Étienne.",
+        ].map((text, index) =>
+          aboutBlock(`education-${index}`, text, { listItem: "bullet" }),
+        ),
+      ],
+    },
+    {
+      _key: "career",
+      title: "Career",
+      body: [
+        aboutBlock("career-profirst-title", "2024 → 2026 PROFIRST", {
+          style: "h3",
+        }),
+        aboutBlock(
+          "career-profirst",
+          "A renowned events agency, Profirst opened the doors of luxury fashion and high-end events. Fashion shows, striking invitations, generous budgets: room to push creation further. I rarely produced so many concepts and images in so little time.",
+        ),
+        aboutBlock("career-feelink-title", "2016 → 2024 — Feelink Studio", {
+          style: "h3",
+        }),
+        aboutBlock(
+          "career-feelink",
+          "Co-founding Feelink Studio remains my biggest adventure. I built a team, worked with a wide range of clients and led projects from concept to delivery. Passion, pleasure and a human-centred approach were the guides, day and night. Years full of learning and success.",
+        ),
+        aboutBlock("career-hoet-title", "2015 → 2016 — Hoet&Hoet", {
+          style: "h3",
+        }),
+        aboutBlock(
+          "career-hoet",
+          "Short but intense. Large-budget projects alongside experienced talents: a lot learned in little time. Graphic creation and production for various clients, plus teamwork on graphic research, presentations and productions.",
+        ),
+        aboutBlock("career-incha-title", "2014 → 2016 — INCHA", {
+          style: "h3",
+        }),
+        aboutBlock(
+          "career-incha",
+          "Launched a creative collective selling screen-printed textile designs, alongside a freelance graphic design career. Wonderful artistic encounters, inspiring workshop sessions, hands stained with paint.",
+        ),
+        aboutBlock("career-finess-title", "2014 → 2015 — Fi-Ness Brands", {
+          style: "h3",
+        }),
+        aboutBlock(
+          "career-finess",
+          "A brief stint in an agency specialised in brand identity and publishing, working on ever larger projects. In direct contact with clients, I designed and rolled out editorial, graphic and web guidelines. Catalogues, visual identities, websites, advertising campaigns, stationery.",
+        ),
+        aboutBlock("career-nm-title", "2009 → 2014 — NM Editions", {
+          style: "h3",
+        }),
+        aboutBlock(
+          "career-nm",
+          "Working with sales teams and editors, I was solely in charge of creating new A3 magazines centred on the Sablon and Louise districts of Brussels. Graphic line, layout, advertising design, project management, relations with editors, translators and printers: all mine. Around 35 magazines in five years.",
+        ),
+      ],
+    },
+  ],
+  manifesto:
+    "My ground: turning complexity into clear, distinctive and lasting experiences.",
+  closing:
+    "My path is varied, and I’ll keep it built on sharing, learning and performance.\nReach out, I’d love to walk you through all over a coffee or a call.",
+  footer: {
+    tagline: "Good vibes, hot coffee, big ideas",
+    phone: "+32 477 20 38 05",
+    email: "kisskiss@charlesberard.com",
+  },
+};
 
 export const fallbackProjects: Project[] = [
   {
@@ -314,13 +489,13 @@ function buildFallbackHomeSections(): HomeSection[] {
     {
       _type: "homeManifestoSection",
       _key: "manifesto",
-      label: "Manifeste",
+      label: "Manifesto",
       text: "Seeking meaning is our most reckless obsession. Yet form only achieves beauty when purpose gives it shape. Isn’t that beautiful?",
     },
     {
       _type: "homeProjectIndexSection",
       _key: "projects",
-      label: "Projets",
+      label: "Projects",
       projects: [p1, p2, p3, p4],
       resolvedRows: [
         { _key: "row-1", layout: "single", projects: [p1] },
@@ -338,46 +513,46 @@ function buildFallbackHomeSections(): HomeSection[] {
 export const fallbackSiteSettings: SiteSettings = {
   siteTitle: "Charles Berard",
   headerNavigation: [
-    { label: "Projets", href: "/", variant: "primary" },
-    { label: "À propos", href: "/a-propos", variant: "secondary" },
-    { label: "Contact", href: "/contact", variant: "secondary" },
+    { label: "HOME", href: "/", variant: "primary" },
+    { label: "ABOUT", href: "/about", variant: "secondary" },
   ],
   footerText:
-    "Charles Berard — direction graphique, identité et conception print.",
+    "Charles Berard — art direction, visual identity and print design.",
   footerLinks: [
-    { label: "Projets", href: "/" },
-    { label: "À propos", href: "/a-propos" },
+    { label: "HOME", href: "/" },
+    { label: "ABOUT", href: "/about" },
     { label: "Contact", href: "/contact" },
   ],
   seo: {
-    title: "Charles Berard — Direction graphique",
+    title: "Charles Berard — Art direction",
     description:
-      "Portfolio de Charles Berard, direction graphique et identité visuelle.",
+      "Charles Berard portfolio — art direction and visual identity.",
   },
 };
 
 export const fallbackHome: Home = {
-  title: "Accueil",
+  title: "Home",
   heroTitle: "Charles Bérard",
   marqueeText: "Charles Bérard, brand designer & creative director",
   sections: buildFallbackHomeSections(),
   seo: {
-    title: "Charles Berard — Direction graphique",
-    description: "Portfolio de projets sélectionnés.",
+    title: "Charles Berard — Art direction",
+    description: "A selection of projects by Charles Berard.",
   },
 };
 
 export const fallbackAboutPage: Page = {
-  title: "À propos",
-  slug: "a-propos",
+  title: "About",
+  slug: "about",
+  about: fallbackAboutContent,
   intro:
     "Direction graphique indépendante, entre papier, identité et mise en scène.",
   body: textToBlocks(
     "Charles Berard accompagne des institutions, des maisons de mode et des festivals dans la conception d'identités visuelles et de systèmes graphiques complets.\nDu naming à la scénographie, du print au digital, chaque projet est pensé pour durer et pour tenir en grand format autant qu'en détail.\nCe portfolio présente une sélection de travaux réalisés et d'axes de recherche graphique — des projets menés jusqu'au bout, et d'autres qui restent des explorations abouties.",
   ),
   seo: {
-    title: "À propos — Charles Berard",
-    description: "Direction graphique et identité visuelle.",
+    title: "About — Charles Berard",
+    description: "Art direction and visual identity.",
   },
 };
 

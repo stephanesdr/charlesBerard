@@ -42,7 +42,7 @@ export function HeroTitle({ title }: HeroTitleProps) {
     <section
       ref={rootRef}
       data-home-section="hero"
-      className="flex min-h-dvh items-end px-5 pb-[20dvh] pt-24 lg:px-20"
+      className="container absolute inset-x-0 top-[14dvh] z-20 lg:top-[10dvh]"
     >
       <h1
         aria-label={title}

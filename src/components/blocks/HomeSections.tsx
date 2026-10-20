@@ -7,6 +7,7 @@ import type {
 import { HeroTitle } from "@/components/home/HeroTitle";
 import { SiteMarquee } from "@/components/home/SiteMarquee";
 import { ServicesStatement } from "@/components/home/ServicesStatement";
+import { HomeIntroMedia } from "@/components/home/HomeIntroMedia";
 import { ManifestoBox } from "@/components/home/ManifestoBox";
 import { ProjectIndex } from "@/components/home/ProjectIndex";
 import { HomeFooter } from "@/components/home/HomeFooter";
@@ -16,6 +17,7 @@ type HomeSectionsProps = {
   heroTitle: string;
   marqueeText: string;
   siteTitle: string;
+  projectLinksEnabled: boolean;
 };
 
 function isResolvedProjectIndex(
@@ -32,18 +34,25 @@ export function HomeSections({
   heroTitle,
   marqueeText,
   siteTitle,
+  projectLinksEnabled,
 }: HomeSectionsProps) {
+  const intro = sections.find(
+    (section): section is HomeIntroSection =>
+      section._type === "homeIntroSection",
+  );
+
   return (
     <>
-      <HeroTitle title={heroTitle} />
+      <div data-home-hero-stage className="relative h-[105dvh]">
+        <HeroTitle title={heroTitle} />
+        <HomeIntroMedia media={intro?.media} />
+      </div>
       <SiteMarquee text={marqueeText} />
       {sections.map((section) => {
         if (section._type === "homeIntroSection") {
-          const intro = section as HomeIntroSection;
-          if (!intro.text) return null;
-          return (
-            <ServicesStatement key={section._key} text={intro.text} />
-          );
+          return section.text ? (
+            <ServicesStatement key={section._key} text={section.text} />
+          ) : null;
         }
 
         if (section._type === "homeManifestoSection") {
@@ -56,7 +65,13 @@ export function HomeSections({
           section._type === "homeProjectIndexSection" &&
           isResolvedProjectIndex(section)
         ) {
-          return <ProjectIndex key={section._key} section={section} />;
+          return (
+            <ProjectIndex
+              key={section._key}
+              section={section}
+              projectLinksEnabled={projectLinksEnabled}
+            />
+          );
         }
 
         return null;

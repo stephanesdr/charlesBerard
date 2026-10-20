@@ -7,7 +7,8 @@ flowchart TB
   subgraph frontend [Next.js App Router]
     Layout[layout.tsx + container]
     Home[HomeSections]
-    Pages[projets / a-propos / contact]
+    Pages[projets / AboutPage / contact]
+    AboutShader[AboutShaderHero + Three scene]
     Blocks[ProjectIndex sticky / ProjectDetail / PageContent]
     PT[CustomPortableText]
     Media[Media + Lightbox]
@@ -28,6 +29,7 @@ flowchart TB
 
   Home --> Fetch
   Pages --> Fetch
+  Pages --> AboutShader
   Home --> Lenis
   Fetch -->|env| SanityAPI[Sanity CDN/API]
   Fetch -->|sinon| Fallback
@@ -73,13 +75,24 @@ flowchart TD
 - `getHomePageData()` → `ensureHomeSections()` + `resolveHomeSections()`
 - `home.projects[]` → blocs sticky ; `rows` / `items` legacy en fallback
 - `project.homeRows[]` (`single` \| `pair`) ; synthèse depuis cover/gallery si vide
-- Composants : `HeroTitle`, `SiteMarquee`, `ServicesStatement`, `ManifestoBox`, `ProjectIndex`, `ProjectBlock`, `ProjectMediaRow`, `HomeFooter`
+- Composants : `HeroTitle`, `SiteMarquee`, `HomeIntroMedia`, `ServicesStatement`, `ManifestoBox`, `ProjectIndex`, `ProjectBlock`, `ProjectMediaRow`, `HomeFooter`
+- `PROJECT_LINKS_ENABLED` est lu côté serveur puis propagé jusqu’à `ProjectBlock`
 
 ### Navigation area-font
 
 - `AreaHeader` : `buttonVariants` navPrimary / navSecondary
+- État actif dérivé de `usePathname` avec `aria-current="page"`
 - Scroll-hide GSAP
 - Font 16px bold
+
+### About éditoriale + shader
+
+- `AboutPage` reste Server Component et assemble le contenu structuré Sanity
+- Grille desktop Figma : largeur 1352px, colonnes 482/656px, gutter 214px
+- `AboutShaderHero` garde un unique `h1` HTML ; le canvas décoratif devient visible uniquement après initialisation
+- `aboutHeroScene` possède tout le cycle Three.js et le cleanup ; textures texte/ombre générées localement
+- Reduced-motion ou échec WebGL : fallback HTML statique, sans canvas
+- Footer About dédié ; `SiteFooter` global masqué sur `/about`
 
 ### Portable Text / Media / Animations
 
@@ -93,8 +106,10 @@ flowchart TD
 |------|------|
 | `project` | Portfolio + `orderRank` |
 | `page` | À propos, Contact |
+| `aboutContent` | Hero, sections Portable Text, manifeste, conclusion et footer About |
 | `home` | Singleton, `sections[]` page builder |
 | `homeIntroSection` | Bloc services (uppercase) |
+| `homeIntroMedia` | Image ou fichier vidéo + poster/alt pour l’intro |
 | `homeManifestoSection` | Box manifeste |
 | `homeProjectIndexSection` | Index sticky (`projects[]`, `rows` legacy) |
 | `homeMediaRow` | Rangée médias d’un projet |
@@ -115,7 +130,8 @@ flowchart TD
 |-------|--------|-----------|
 | `/` | `(site)` | `HomeSections` |
 | `/projets/[slug]` | `(site)` | `ProjectDetail` |
-| `/a-propos` | `(site)` | `PageContent` |
+| `/about` | `(site)` | `AboutPage` + `AboutShaderHero` |
+| `/a-propos` | `(site)` | redirection permanente vers `/about` |
 | `/contact` | `(site)` | `PageContent` |
 | `/studio` | `studio` (h-dvh) | `NextStudio` |
 

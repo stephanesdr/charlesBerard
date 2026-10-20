@@ -10,6 +10,6 @@ type SiteFooterProps = {
 
 export function SiteFooter(props: SiteFooterProps) {
   const pathname = usePathname();
-  if (pathname === "/") return null;
+  if (pathname === "/" || pathname === "/about") return null;
   return <Footer {...props} />;
 }

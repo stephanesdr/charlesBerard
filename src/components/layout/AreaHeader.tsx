@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -9,14 +10,14 @@ import { cn } from "@/lib/utils";
 import type { NavigationItem } from "@/lib/sanity/fallback-data";
 
 type AreaHeaderProps = {
-  siteTitle: string;
   navigation: NavigationItem[];
 };
 
-export function AreaHeader({ siteTitle, navigation }: AreaHeaderProps) {
+export function AreaHeader({ navigation }: AreaHeaderProps) {
   const headerRef = useRef<HTMLElement>(null);
   const [hidden, setHidden] = useState(false);
   const lastY = useRef(0);
+  const pathname = usePathname();
 
   useGSAP(
     () => {
@@ -48,31 +49,25 @@ export function AreaHeader({ siteTitle, navigation }: AreaHeaderProps) {
       ref={headerRef}
       className={cn(
         "site-header fixed inset-x-0 top-0 z-[1000]",
-        "flex items-center justify-between gap-4",
+        "flex items-center justify-center",
         "container py-2",
       )}
     >
-      <Link
-        href="/"
-        className={cn(
-          "text-base font-bold leading-none text-ink no-underline",
-          "transition-colors duration-150 hover:text-accent-violet",
-        )}
-      >
-        {siteTitle}
-      </Link>
-
       <nav
         className="flex items-center gap-2 sm:gap-3"
-        aria-label="Navigation principale"
+        aria-label="Main navigation"
       >
         {navigation.map((item) => {
-          const isPrimary = item.variant === "primary";
           const isExternal = item.href.startsWith("http");
+          const isActive =
+            !isExternal &&
+            (item.href === "/"
+              ? pathname === "/"
+              : pathname === item.href || pathname.startsWith(`${item.href}/`));
 
           const className = cn(
             buttonVariants({
-              variant: isPrimary ? "navPrimary" : "navSecondary",
+              variant: isActive ? "navPrimary" : "navSecondary",
               size: "nav",
             }),
           );
@@ -96,6 +91,7 @@ export function AreaHeader({ siteTitle, navigation }: AreaHeaderProps) {
               key={item.href + item.label}
               href={item.href}
               className={className}
+              aria-current={isActive ? "page" : undefined}
             >
               {item.label}
             </Link>

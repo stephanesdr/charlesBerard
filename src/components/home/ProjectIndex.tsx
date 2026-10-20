@@ -3,9 +3,13 @@ import { ProjectBlock } from "./ProjectBlock";
 
 type ProjectIndexProps = {
   section: ResolvedHomeProjectIndexSection;
+  projectLinksEnabled: boolean;
 };
 
-export function ProjectIndex({ section }: ProjectIndexProps) {
+export function ProjectIndex({
+  section,
+  projectLinksEnabled,
+}: ProjectIndexProps) {
   const projects = section.resolvedProjects ?? [];
 
   if (!projects.length) return null;
@@ -17,6 +21,7 @@ export function ProjectIndex({ section }: ProjectIndexProps) {
           key={item.project._id}
           item={item}
           priority={index === 0}
+          projectLinksEnabled={projectLinksEnabled}
         />
       ))}
     </section>

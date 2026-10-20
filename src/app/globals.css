@@ -23,6 +23,8 @@
   --radius-media: 0;
 
   --spacing-section-y: 15dvh;
+  --spacing-project-row-gap: 20dvh;
+  --spacing-project-row-stagger: 8dvh;
 
   --text-display: 9.75rem;
   --text-display--line-height: 1.2;
@@ -32,6 +34,8 @@
   --text-body--line-height: 1.3;
   --text-caption: 1.25rem;
   --text-caption--line-height: 1.3;
+  --text-project-caption: 0.875rem;
+  --text-project-caption--line-height: 1.4;
   --text-tag: 0.75rem;
   --text-tag--line-height: 1.2;
   --text-tag--letter-spacing: 0.0375em;
@@ -210,6 +214,11 @@
 @utility font-caption {
   font-size: var(--text-caption);
   line-height: var(--text-caption--line-height);
+}
+
+@utility font-project-caption {
+  font-size: var(--text-project-caption);
+  line-height: var(--text-project-caption--line-height);
 }
 
 @utility font-tag {

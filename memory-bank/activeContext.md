@@ -4,11 +4,24 @@
 
 ## Focus actuel
 
-Homepage transposée depuis maisonauge.com : hero, marquee, services, manifeste, **index projets sticky** + rangées médias 1|2. Prochaine valeur : assets images CMS + pages projet.
+Home et About alignées sur les maquettes Figma, avec contenu About structuré dans Sanity et hero Three.js accessible.
 
 ## Travail récent
 
-- **Playwright e2e** : desktop 1440 + mobile 390, `pnpm test:e2e` (12 specs vertes)
+- **About Figma** : grille éditoriale 1352px, colonnes 482/656px, rythme 230px, typographies/sections/footer dédiés et responsive mobile
+- **Hero About shader** : `CHARLES / BéRARD` en texture Canvas locale sur plane Three.js subdivisé, déplacement pointer + ombre, géométrie synchronisée au `h1` HTML
+- **Cycle WebGL** : DPR limité, `ResizeObserver`, pause hors viewport, context loss, disposal complet et fallback HTML en reduced-motion/échec WebGL
+- **About Sanity** : objet structuré (hero, standfirst, clients, sections Portable Text, manifeste, conclusion, footer), `page-a-propos` migré et publié
+- **Navigation active** : état violet dérivé de `usePathname`, lien inactif vert et `aria-current="page"`
+- **Validation About** : géométrie Figma vérifiée à 1512px, fallback mobile/reduced-motion vérifié, 20 tests Playwright verts sur desktop/mobile
+- **Intro media Sanity** : `homeIntroMedia` image ou vidéo MP4/WebM, poster/alt, autoplay silencieux hors reduced-motion et bouton play/pause accessible
+- **Premier viewport Figma** : menu HOME / ABOUT centré sans wordmark secondaire ; titre à 10dvh, média centré à 40dvh avec 12px de débordement sous un viewport 1920×1080 ; marquee en arrière-plan
+- **Marquee first viewport** : couche `z-10` derrière le média `z-30`, fade CSS dès `scrollY > 2`, retour visible uniquement en haut, reduced-motion sans transition
+- **Navigation anglaise** : HOME / ABOUT, route canonique `/about`, redirection permanente `/a-propos`, document Sanity migré et publié
+- **Feature flag** : `PROJECT_LINKS_ENABLED=false` par défaut et configuré sur Vercel (production/preview/development) ; cover statique sans faux lien quand désactivé
+- **Grille home** : conteneur global 90rem, espace sticky/content > 100px, captions 14px, row gap 20dvh / stagger 8dvh
+- **Validation** : typecheck, lint, build et 20 tests Playwright desktop/mobile verts
+- **Playwright e2e** : desktop 1440 + mobile 390, `pnpm test:e2e` (20 tests verts, 4 skips ciblés)
 - **Index home sticky** : `ProjectIndex` / `ProjectBlock` — colonne gauche sticky, rangées `single` (1.65:1) et `pair` (0.77) + légendes
 - **Lenis + GSAP** : smooth scroll sans `overflow:hidden` html/body ; parallax scale médias ; `scrollerProxy`
 - **Tokens Figma** : `surface` `#fef5f9`, `ink` `#212a37`, `accent-violet` `#8537f9`, `accent-green` `#2ec864`, `violet-10`
@@ -30,16 +43,17 @@ Homepage transposée depuis maisonauge.com : hero, marquee, services, manifeste,
 | `h1` unique + `h2` projets | SEO / lecteurs d’écran vs split spans |
 | `basePath: "/studio"` obligatoire | Next.js embedded Studio |
 | Fallback data si pas d’env | Build Vercel / CI sans secrets |
+| UI/URLs publiques en anglais | Un seul langage public, sans couche i18n |
+| Dark mode reporté | Attendre la maquette About dédiée |
 
 ## Prochaines étapes suggérées
 
-1. Client : remplir `cover` / `rowN_media_*` (liens Drive) dans l’onglet `Projets v2`
-2. Plan suivant : seed depuis l’export Sheet + téléchargement/upload des assets vers Sanity (`coverImage`, `homeRows.media`)
+1. Renseigner l’image ou la vidéo d’intro dans le singleton Home Sanity
+2. Traduire les contenus éditoriaux CMS encore en français
 3. Déposer `.woff2` Neue Montreal dans `src/fonts/` et basculer `next/font/local`
-4. Supprimer ou publier le brouillon Studio `drafts.project-fashion-show-massimo-dutti-ss25` (juin, sans champs v2 — écraserait `category`/`homeRows` si publié tel quel)
-5. Pages projet / à-propos dans le même système visuel
+4. Activer `PROJECT_LINKS_ENABLED=true` quand les pages projet seront prêtes
+5. Dark mode après validation finale du contenu About
 6. Domaine custom
-7. Visual Editing / `defineLive`
 
 ## Patterns à respecter
 

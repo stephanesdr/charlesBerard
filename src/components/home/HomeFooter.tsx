@@ -8,19 +8,19 @@ type HomeFooterProps = {
 
 export function HomeFooter({
   email = "contact@charlesberard.eu",
-  location = "Bruxelles",
+  location = "Brussels",
   siteTitle,
 }: HomeFooterProps) {
   return (
     <footer
       data-home-section="footer"
-      className="bg-violet-10 px-5 pt-16 pb-[calc(4rem+100px)] text-ink lg:px-20"
+      className="bg-violet-10 pt-16 pb-[calc(4rem+100px)] text-ink"
     >
-      <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+      <div className="container flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <p className="font-h2 m-0 uppercase">{siteTitle}</p>
           <p className="mt-3 font-caption m-0">
-            Direction graphique — {location}
+            Art direction — {location}
           </p>
         </div>
         <div className="flex flex-col gap-2 font-tag uppercase tracking-[0.6px]">

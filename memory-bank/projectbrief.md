@@ -9,14 +9,16 @@ Portfolio éditorial pour **Charles Berard**, direction graphique indépendante 
 1. **Portfolio CMS** — Projets éditables via Sanity Studio, contenu seed depuis CSV client.
 2. **Référence visuelle home** — [maisonauge.com](https://maisonauge.com/) (index sticky + rangées médias) et Figma Home 3.
 3. **Référence navigation** — Header style [area-font.eu](https://area-font.eu/) (boutons pills, pas hamburger).
-4. **Langue** — Français uniquement (FR).
+4. **Langue** — Interface et URLs en anglais, sans i18n.
 5. **Déploiement** — Vercel + GitHub, domaine Vercel pour l’instant.
 
 ## Périmètre V1 (livré)
 
 - Home : hero, marquee, services, manifeste, index sticky + rangées médias
 - Pages projet `/projets/[slug]` avec Portable Text + galerie lightbox
-- Pages `/a-propos` et `/contact` (contenu CMS + seed)
+- Pages `/about` et `/contact` (contenu CMS + seed), redirection `/a-propos` → `/about`
+- Média d’introduction CMS : image ou vidéo silencieuse en boucle avec contrôle accessible
+- Liens vers les détails projet pilotés par `PROJECT_LINKS_ENABLED` (désactivés par défaut)
 - Sanity embedded Studio `/studio`
 - Images placeholder jusqu’à assets client
 - Statut projet `concept` pour axes non sélectionnés (ex. Brussels Food Campus) — travail présenté, pas masqué

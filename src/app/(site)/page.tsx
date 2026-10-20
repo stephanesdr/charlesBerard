@@ -17,6 +17,7 @@ export default async function HomePage() {
           `${settings.siteTitle}, brand designer & creative director`
         }
         siteTitle={settings.siteTitle}
+        projectLinksEnabled={process.env.PROJECT_LINKS_ENABLED === "true"}
       />
     </div>
   );

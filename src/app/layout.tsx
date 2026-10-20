@@ -24,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description:
       settings.seo?.description ||
-      "Portfolio Charles Berard — direction graphique.",
+      "Charles Berard portfolio — art direction.",
   };
 }
 
@@ -37,7 +37,7 @@ export default async function RootLayout({
 
   return (
     <html
-      lang="fr"
+      lang="en"
       className={cn("font-sans", interTight.variable)}
       suppressHydrationWarning
     >

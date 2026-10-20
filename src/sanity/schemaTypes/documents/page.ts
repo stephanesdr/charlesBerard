@@ -30,6 +30,20 @@ export const page = defineType({
       type: "blockContent",
     }),
     defineField({
+      name: "about",
+      title: "About page content",
+      type: "aboutContent",
+      hidden: ({ document }) => {
+        const slug = document?.slug;
+        return !(
+          typeof slug === "object" &&
+          slug !== null &&
+          "current" in slug &&
+          slug.current === "about"
+        );
+      },
+    }),
+    defineField({
       name: "seo",
       title: "SEO",
       type: "seo",

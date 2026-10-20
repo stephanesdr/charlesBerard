@@ -1,13 +1,5 @@
-import type { Metadata } from "next";
-import {
-  generatePageMetadata,
-  PageContent,
-} from "@/components/blocks/PageContent";
-
-export async function generateMetadata(): Promise<Metadata> {
-  return generatePageMetadata("a-propos");
-}
+import { permanentRedirect } from "next/navigation";
 
 export default function AboutPage() {
-  return <PageContent slug="a-propos" />;
+  permanentRedirect("/about");
 }

@@ -7,6 +7,9 @@ test.describe("home sections", () => {
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator("[data-home-section='hero']")).toBeVisible();
     await expect(page.locator("[data-home-section='marquee']")).toBeVisible();
+    await expect(
+      page.locator("[data-home-section='intro-media']"),
+    ).toBeVisible();
     await expect(page.locator("[data-home-section='services']")).toBeVisible();
     await expect(page.locator("[data-home-section='manifesto']")).toBeVisible();
     await expect(page.locator("[data-home-section='index']")).toBeVisible();
@@ -17,6 +20,7 @@ test.describe("home sections", () => {
     );
     expect(order).toEqual([
       "hero",
+      "intro-media",
       "marquee",
       "services",
       "manifesto",
@@ -29,5 +33,18 @@ test.describe("home sections", () => {
     await expect(marquee).toHaveClass(/pointer-events-none/);
     const tabStops = await marquee.locator("a, button, [tabindex]").count();
     expect(tabStops).toBe(0);
+    await expect(marquee).toHaveAttribute("data-marquee-visible", "true");
+
+    await page.evaluate(() => window.scrollTo(0, 120));
+    await expect(marquee).toHaveAttribute("data-marquee-visible", "false");
+    await expect(marquee).toHaveCSS("opacity", "0");
+
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect(marquee).toHaveAttribute("data-marquee-visible", "true");
+    await expect(marquee).toHaveCSS("opacity", "1");
+
+    const introMedia = page.locator("[data-home-section='intro-media']");
+    await expect(introMedia).toHaveCSS("position", "absolute");
+    await expect(introMedia).toHaveCSS("z-index", "30");
   });
 });

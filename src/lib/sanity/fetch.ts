@@ -19,6 +19,15 @@ import {
   type SiteSettings,
 } from "./fallback-data";
 
+const imageProjection = `
+  _type,
+  alt,
+  hotspot,
+  crop,
+  asset,
+  "lqip": asset->metadata.lqip
+`;
+
 const projectListFields = `
   _id,
   title,
@@ -29,13 +38,18 @@ const projectListFields = `
   year,
   services,
   summary,
-  coverImage,
-  gallery,
+  coverImage{ ${imageProjection} },
+  gallery[]{ ${imageProjection} },
   homeRows[]{
     _key,
     layout,
     caption,
-    media
+    media[]{ ${imageProjection} }
+  },
+  seo{
+    title,
+    description,
+    ogImage{ ${imageProjection} }
   }
 `;
 
@@ -49,18 +63,22 @@ const projectFields = `
   services,
   summary,
   body,
-  coverImage,
+  coverImage{ ${imageProjection} },
   homeRows[]{
     _key,
     layout,
     caption,
-    media
+    media[]{ ${imageProjection} }
   },
-  gallery,
+  gallery[]{ ${imageProjection} },
   projectStatus,
   orderRank,
   order,
-  seo
+  seo{
+    title,
+    description,
+    ogImage{ ${imageProjection} }
+  }
 `;
 
 export async function getProjects(): Promise<Project[]> {
@@ -125,6 +143,13 @@ const homeQuery = `*[_type == "home"][0] {
     _key,
     label,
     text,
+    media{
+      kind,
+      alt,
+      image{ ${imageProjection} },
+      poster{ ${imageProjection} },
+      "videoUrl": video.asset->url
+    },
     "projects": projects[]->{ ${projectListFields} },
     rows[]{
       _key,
@@ -346,7 +371,7 @@ export async function getHomePageData(): Promise<{
 
 export async function getPageBySlug(slug: string): Promise<Page | null> {
   if (!isSanityConfigured) {
-    if (slug === "a-propos") return fallbackAboutPage;
+    if (slug === "about") return fallbackAboutPage;
     if (slug === "contact") return fallbackContactPage;
     return null;
   }
@@ -358,17 +383,30 @@ export async function getPageBySlug(slug: string): Promise<Page | null> {
         "slug": slug.current,
         intro,
         body,
+        about{
+          heroLines,
+          standfirst,
+          clients,
+          sections[]{
+            _key,
+            title,
+            body
+          },
+          manifesto,
+          closing,
+          footer
+        },
         seo
       }`,
       params: { slug },
     });
     const doc = page as Page | null;
     if (doc) return doc;
-    if (slug === "a-propos") return fallbackAboutPage;
+    if (slug === "about") return fallbackAboutPage;
     if (slug === "contact") return fallbackContactPage;
     return null;
   } catch {
-    if (slug === "a-propos") return fallbackAboutPage;
+    if (slug === "about") return fallbackAboutPage;
     if (slug === "contact") return fallbackContactPage;
     return null;
   }

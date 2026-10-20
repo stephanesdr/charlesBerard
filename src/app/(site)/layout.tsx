@@ -14,10 +14,7 @@ export default async function SiteLayout({
   return (
     <AnimationOrchestratorProvider>
       <SmoothScroll>
-        <AreaHeader
-          siteTitle={settings.siteTitle}
-          navigation={settings.headerNavigation ?? []}
-        />
+        <AreaHeader navigation={settings.headerNavigation ?? []} />
         <main className="pt-14 sm:pt-12">{children}</main>
         <SiteFooter text={settings.footerText} links={settings.footerLinks} />
       </SmoothScroll>

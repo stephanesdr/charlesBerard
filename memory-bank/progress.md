@@ -2,7 +2,7 @@
 
 ## Statut global
 
-**Home maisonauge livrée** — index sticky, tokens Figma, Playwright e2e, seed CSV v2.
+**Home + About Figma livrées** — About éditoriale Sanity avec hero shader Three.js et fallback accessible.
 
 | Zone | Statut |
 |------|--------|
@@ -12,27 +12,31 @@
 | Seed contenu | ✅ CSV v2 + `homeRows` / `projects[]` / manifeste |
 | Google Sheet client | ✅ Onglets `Projets v2` + `Structure colonnes` — export CSV → seed OK |
 | Home index sticky | ✅ `ProjectIndex` + rangées médias 1\|2 |
-| Playwright e2e | ✅ desktop 1440 + mobile 390 (12 specs) |
+| Playwright e2e | ✅ desktop 1440 + mobile 390 (20 tests, 4 skips ciblés) |
 | Tokens + Neue Montreal stack | ✅ fallback Inter Tight |
 | Figma Home 3 | ✅ nommage, variables, grille 12, composants |
+| Feedback Figma homepage | ✅ composition first viewport, marquee fade/stacking, intro media, marges, gutter, captions, rythme vertical |
+| Navigation anglaise | ✅ HOME / ABOUT + `/about` canonique |
+| About Figma | ✅ grille 1352px, contenu structuré, hero shader et footer dédié |
+| Liens projet | ✅ `PROJECT_LINKS_ENABLED=false` sur Vercel + fallback local |
 | Memory bank | ✅ À jour |
 
 ## Ce qui fonctionne
 
-- Home : hero (`h1`), marquee fixe, services, manifeste, index sticky, footer violet-10
+- Home : hero (`h1`), marquee, intro image/vidéo, services, manifeste, index sticky, footer violet-10
 - Index : colonne gauche sticky (titre `h2`, catégorie, cover 2:3), rangées single/pair + légende
 - Lenis + GSAP ScrollTrigger (parallax, split chars/mots, reduced-motion)
 - Détail projet : Portable Text, badge Axe, galerie lightbox
-- À propos / Contact : contenu CMS
-- Header pills violet/vert (area-font)
+- About `/about` : contenu Sanity structuré, hero WebGL local, sections éditoriales et footer contact ; `/a-propos` redirige vers `/about`
+- Header pills violet/vert actives via pathname + `aria-current`
 - Studio embedded `/studio`
-- `pnpm build` + `pnpm test:e2e` + `pnpm seed`
+- `pnpm build` + `pnpm lint` + 20 tests Playwright desktop/mobile
 - Fallback si Sanity env absent ; manifesto injecté si absent du CMS
 
 ## En cours / partiel
 
 - Fichiers `.woff2` Neue Montreal à fournir (`src/fonts/README.md`)
-- Images réelles projet (placeholders si pas d’asset)
+- Média intro à renseigner dans Sanity (placeholder sinon)
 - `sanity schema deploy` CLI (SIGABRT local)
 
 ## À faire (backlog)
@@ -44,6 +48,8 @@
 - [ ] Visual Editing / `defineLive`
 - [ ] TypeGen (`pnpm typegen`)
 - [ ] Pages projet dans le même langage visuel
+- [ ] Traduire les contenus éditoriaux CMS encore en français
+- [ ] Dark mode après validation de la maquette About
 - [ ] Domaine custom
 - [ ] Preview env vars sur Vercel
 
@@ -71,6 +77,7 @@
 | 2026-06-16 | Route groups `(site)` / `studio` |
 | 2026-06-16 | Fix `basePath` Studio + patch orderRank |
 | 2026-06-21 | Transposition homepage maisonauge + Playwright + Figma tokens |
+| 2026-10-15 | About Figma + contenu Sanity structuré + hero shader Three.js |
 
 ## Évolution des décisions
 

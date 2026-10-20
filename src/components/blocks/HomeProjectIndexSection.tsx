@@ -27,7 +27,7 @@ function ProjectIndexLink({ project }: { project: Project }) {
       {project.title}
       {project.projectStatus === "concept" && (
         <span className="mt-2 block text-[0.35em] font-bold uppercase tracking-wide text-ink/50">
-          Axe
+          Concept
         </span>
       )}
     </Link>
@@ -58,7 +58,7 @@ export function HomeProjectIndexSection({
       ref={sectionRef}
       className="layout-grid library-overview-2columns mb-5 border-b border-ink/20 pb-5"
     >
-      <div className="content-type-column">{section.label || "Projets"}</div>
+      <div className="content-type-column">{section.label || "Projects"}</div>
       <div className="library-column font-xxl project-index-rows">
         {rows.map((row) => (
           <ul
@@ -81,7 +81,7 @@ export function HomeProjectIndexSection({
       {section.showSidebar && (
         <div className="trial-download-column">
           <p className="mb-4 text-ink/70">
-            {projectCount} projet{projectCount > 1 ? "s" : ""}
+            {projectCount} project{projectCount > 1 ? "s" : ""}
           </p>
           {isExternalLink ? (
             <a
